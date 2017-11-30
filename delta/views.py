@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 from DBProjectDelta.settings import BASE_DIR
 from Surfer import Surfer
 import Utils
 import json
 
 
+@ensure_csrf_cookie
 def so_index(request):
     return render(request, 'so-index.html')
 

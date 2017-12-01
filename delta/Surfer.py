@@ -89,11 +89,15 @@ class Surfer:
         try:
             bingo1 = html.xpath("//a[@dir='ltr']/@href")[0].split("=")[1]
             if len(bingo1) != 0:
+                if self.debug:
+                    print "MATCH AT: " + bingo1
                 return bingo1
         except:
             if self.debug:
                 print "Could not fetch search from source, checking redirects..."
         bingo2 = get.url
+        if self.debug:
+            print "MATCH AT: " + bingo2
         return bingo2
 
     def get_topic_tags(self):

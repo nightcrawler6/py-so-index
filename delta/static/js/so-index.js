@@ -94,7 +94,7 @@ function loadStackoverflow(){
 	    	$('#loader-div').fadeIn();
 	    	$.ajax({
 	    		type: "POST",
-	    		url: "http://localhost:8000/ask",
+	    		url: "ask",
 	    		data: JSON.stringify(data),
 	    		headers: { "X-CSRFToken": getCookie("csrftoken") },
 	    		contentType: 'application/json; charset=utf-8',

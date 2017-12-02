@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
-from DBProjectDelta.settings import BASE_DIR
+from DBProjectDelta.settings import BASE_DIR, CACHE_SIZE
 from Surfer import Surfer
 import Utils
 import json
 from cache import Cache
 
-cache = Cache(2)
+# init cache singletone
+cache = Cache(CACHE_SIZE)
 
 @ensure_csrf_cookie
 def so_index(request):

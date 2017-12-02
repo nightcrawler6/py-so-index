@@ -5,7 +5,9 @@ from DBProjectDelta.settings import BASE_DIR
 from Surfer import Surfer
 import Utils
 import json
+from cache import Cache
 
+cache = Cache(2)
 
 @ensure_csrf_cookie
 def so_index(request):
@@ -36,7 +38,7 @@ def ask(request):
         user_query_service = user_query_service.lower()
         lucky_charm = so.get_lucky(user_query_search, Utils.method_mapping[user_query_service])
 
-        so.set_url(lucky_charm)
+        cache.checkCache(so, lucky_charm)
 
         try:
             mytitle = so.get_title()

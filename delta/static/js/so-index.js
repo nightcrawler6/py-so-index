@@ -42,7 +42,7 @@ $(document).ready(function(){
 });
 
 function loadStackoverflow(){
-	$.get("so-express", function(data){
+	$.get("/so-express", function(data){
 		$('#unique-view').hide();
 		$('#unique-view').append(data);
 		$('#unique-view').fadeIn();

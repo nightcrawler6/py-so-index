@@ -1,12 +1,12 @@
 $(document).ready(function(){
-	$.ajaxSetup({
+	/*$.ajaxSetup({
      beforeSend: function(xhr, settings) {
-         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+         if (!(/^http:.*!/.test(settings.url) || /^https:.*!/.test(settings.url))) {
              // Only send the token to relative URLs i.e. locally.
              xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
          }
      }
-	});
+	});*/
 	$(document).data('page',0);
 	$('#stack-sec').on('click', function(event) {
 		if($(document).data('page') == 0) return;
@@ -138,6 +138,7 @@ function loadStackoverflow(){
 	    			var template = $(format('<span style="float: right; margin-right: 10px; margin-top: 10px; background-color: {0}"class="badge badge-default">{1}</span>',badgeCol, badgeVal));
 	    			panelObject.append(template);
 	    			panelObject.append(panelBody);
+	    			$(panelObject).find("a").attr('target','_blank');
 	    			$("#results-container").prepend(panelObject);
 	    			var body = $("html, body");
 	    			$(document).off('scroll');

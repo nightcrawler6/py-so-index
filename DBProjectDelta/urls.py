@@ -17,10 +17,12 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from delta.views import *
+from delta.dbtester import *
 
 urlpatterns = [
     url(r'^admin', admin.site.urls),
     url(r'^home', so_index, name="home"),
     url(r'^so-express', iframe_page, name="express"),
-    url(r'^ask', ask, name="ask")
+    url(r'^ask', ask, name="ask"),
+    url(r'^check-db', checkconnectivity, name="query")
 ]

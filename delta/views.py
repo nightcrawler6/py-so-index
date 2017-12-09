@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from DBProjectDelta.settings import BASE_DIR, CACHE_SIZE
@@ -39,7 +39,9 @@ def ask(request):
         user_query_service = user_query_service.lower()
         lucky_charm = so.get_lucky(user_query_search, Utils.method_mapping[user_query_service])
 
-        cache.checkCache(so, lucky_charm)
+        hit = cache.checkCache(so, lucky_charm)
+        if hit:
+            return HttpResponse(json.dumps(hit['sourceobj']), content_type="application/json", status=200)
 
         try:
             mytitle = so.get_title()
@@ -61,7 +63,8 @@ def ask(request):
         overall['tags'] = mytags
         overall['is_top_rated'] = is_best
 
-        return HttpResponse(json.dumps(overall), content_type="application/json", status=200)
+        cache.populate_cache(overall, lucky_charm)
 
+        return HttpResponse(json.dumps(overall), content_type="application/json", status=200)
 
 

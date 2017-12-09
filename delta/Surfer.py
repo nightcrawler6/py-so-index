@@ -1,7 +1,6 @@
 import requests
 import lxml.html as magic
 import Utils
-import sys
 
 headers = {
     'User-Agent': 'Mozilla/5.0\

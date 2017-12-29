@@ -22,8 +22,6 @@ from delta.dbtester import *
 urlpatterns = [
     url(r'^admin', admin.site.urls),
     url(r'^home', so_index, name="home-view"),
-    url(r'^so-express', iframe_page, name="express"),
-    url(r'^ask', ask, name="ask"),
     url(r'^check-db', checkconnectivity, name="query"),
     url(r'^signup', signup, name="signup-view"),
     url(r'^signout', logout, name="logout"),

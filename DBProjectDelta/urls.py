@@ -24,6 +24,5 @@ urlpatterns = [
     url(r'^musico_register', musico_register, name="musico-register"),
     url(r'^musico', musico, name="home-view"),
     url(r'^check-db', checkconnectivity, name="query"),
-    url(r'^signup', signup, name="signup-view"),
-    url(r'^signout', logout, name="logout"),
+    url(r'^signup', register_user, name="register_new_user"),
 ]

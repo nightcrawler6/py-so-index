@@ -31,6 +31,36 @@ def musico(request):
 def musico_register(request):
     return render(request, 'signup.html')
 
+@ensure_csrf_cookie
+def register_user(request):
+    # user is already logged in
+    if request.session.has_key('username'):
+        print request.session['username']
+        return redirect("/musico")
+
+    # user is not logged in - trying to create new account
+    if request.method == "POST":
+        first_name = request.POST['first_name']
+        last_name = request.POST['last_name']
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+
+        user = None
+
+        if User.objects.filter(username=username).exists():
+            user = None
+        else:
+            user = User.objects.create_user(username=username, email=email, password=password, first_name=first_name, last_name=last_name)
+            user.save()
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            request.session['username'] = username
+            return redirect("/musico")
+        else:
+            return redirect("/musico_register")
+
 def signup(request):
     if request.session.has_key('username'):
         print request.session['username']

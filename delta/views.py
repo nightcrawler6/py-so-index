@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from DBProjectDelta.settings import BASE_DIR, CACHE_SIZE
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.cache import never_cache
 
 import json
@@ -24,7 +24,10 @@ cache = Cache(CACHE_SIZE)
 @ensure_csrf_cookie
 @never_cache
 def musico(request):
-    return render(request, 'index.html')
+    isAuth = request.user.is_authenticated()
+    context = {"authenticated": isAuth, "user": request.user}
+    return render(request, "index.html", context)
+
 
 @ensure_csrf_cookie
 @never_cache
@@ -32,11 +35,31 @@ def musico_register(request):
     return render(request, 'signup.html')
 
 @ensure_csrf_cookie
+@never_cache
+def login_user(request):
+    username = request.POST['username']
+    password = request.POST['password']
+
+    user = None
+
+    if User.objects.filter(username=username).exists():
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            request.session['username'] = username
+            return redirect("/musico")
+        else:
+            return redirect("/musico_register")
+
+
+@ensure_csrf_cookie
+@never_cache
 def register_user(request):
     # user is already logged in
     if request.session.has_key('username'):
+        user = authenticate(request.session['username'])
         print request.session['username']
-        return redirect("/musico")
+        return redirect("/musico",{'user':user})
 
     # user is not logged in - trying to create new account
     if request.method == "POST":
@@ -56,6 +79,7 @@ def register_user(request):
 
         user = authenticate(username=username, password=password)
         if user is not None:
+            login(request, user)
             request.session['username'] = username
             return redirect("/musico")
         else:
@@ -92,7 +116,8 @@ def signup(request):
                 return HttpResponse(json.dumps(response), content_type="application/json", status=200)
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
 
-def logout(request):
+def logout_user(request):
     if request.session.has_key('username'):
-        del request.session['username']
-    return redirect("signup-view")
+        logout(request)
+        # del request.session['username']
+    return redirect("/musico")

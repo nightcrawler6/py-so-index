@@ -23,6 +23,7 @@ $(document).ready(function(){
 		//$(document).unbind();
 		switchActiveTab(event);
 	});
+
 	$('#math-sec').on('click', function(event) {
 		if($(document).data('page') == 1) return;
 		$(document).data('page',1);

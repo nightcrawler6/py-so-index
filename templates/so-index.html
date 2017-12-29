@@ -47,7 +47,11 @@
 	      <ul class="nav navbar-nav">
 	        <li id="stack-sec" class="active"><a><img class="icon-nav" src='{% static "media/st-icon.png" %}'></img>Stack Overflow</a></li>
 	        <li id="math-sec"><a><img class="icon-nav" src='{% static "media/math-icon.png" %}'></img>Math Exchange</a></li>
+            <li></li>
 	      </ul>
+            <form method="GET" action="/signout/">
+                <input class="btn btn-danger btn-small" type="submit" name="signout-btn" value="Logout" style="float:right; margin-top:8px">
+            </form>
 	    </div>
 	  </div>
 	</nav>

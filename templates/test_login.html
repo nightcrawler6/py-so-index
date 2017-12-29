@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SO Login</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+</head>
+<body>
+    <fieldset style="margin: 8px; border: 1px solid steelblue; padding: 8px; border-radius: 4px; width: 50%; margin-left:auto; margin-right: auto; margin-top:5%;">
+    <div id="main-div" style="text-align: center; width: 50%; margin: auto;">
+        <h1 style="color: dodgerblue">Sign In</h1>
+        <p>
+        <h2>User Name: </h2>
+        <input id="username" type="text" class="form-control">
+        </p>
+
+        <p>
+        <h2>Password: </h2>
+        <input id="password" type="password" class="form-control">
+        </p>
+
+        <button class="btn btn-info btn-small" id="signup" style="width:30%">Login</button>
+    </div>
+    </fieldset>
+    <script>
+        function getCookie(c_name)
+            {
+                if (document.cookie.length > 0)
+                {
+                    c_start = document.cookie.indexOf(c_name + "=");
+                    if (c_start != -1)
+                    {
+                        c_start = c_start + c_name.length + 1;
+                        c_end = document.cookie.indexOf(";", c_start);
+                        if (c_end == -1) c_end = document.cookie.length;
+                        return unescape(document.cookie.substring(c_start,c_end));
+                    }
+                }
+                return "";
+             }
+    </script>
+    <script>
+        $("#signup").on('click', function(){
+            data = {
+                "user": $("#username").val(),
+                "password": $("#password").val()
+            }
+            $.ajax({
+                type: "POST",
+                url: "/signup",
+                data: JSON.stringify(data),
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+                contentType: 'application/json; charset=utf-8',
+                success: function(response){
+                    window.location= response.url;
+                },
+                error: function(){
+
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).keyup(function(event) {
+	    	if (event.keyCode === 13) {
+	    		$("#signup").click();
+	    	}
+	    });
+    </script>
+</body>
+</html>

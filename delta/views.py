@@ -12,13 +12,24 @@ from cache import Cache
 # init cache singletone
 cache = Cache(CACHE_SIZE)
 
+#for reference ONLY!
+#@ensure_csrf_cookie
+#@never_cache
+#def so_index(request):
+#    if request.session.has_key('username'):
+#        return render(request, 'so-index.html')
+#    else:
+#        return render(request, 'test_login.html')
+
 @ensure_csrf_cookie
 @never_cache
-def so_index(request):
-    if request.session.has_key('username'):
-        return render(request, 'so-index.html')
-    else:
-        return render(request, 'test_login.html')
+def musico(request):
+    return render(request, 'index.html')
+
+@ensure_csrf_cookie
+@never_cache
+def musico_register(request):
+    return render(request, 'signup.html')
 
 def signup(request):
     if request.session.has_key('username'):

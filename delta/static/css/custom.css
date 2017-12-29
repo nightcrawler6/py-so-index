@@ -1,0 +1,27 @@
+#first_view {
+	color: #c52630;
+}
+
+#second_view{
+	color: #386d8d;
+}
+
+#third_view{
+	color: #d43e86;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+#first_view:hover{
+	color: #770b12;
+}
+
+#second_view:hover{
+	color: #0e5986;
+}
+
+#third_view:hover{
+	color: #c11769;
+}

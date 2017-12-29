@@ -19,6 +19,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/one-page-wonder.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
 
   </head>
 
@@ -27,14 +28,14 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="index.html">Music&amp;Co</a>
+        <a class="navbar-brand" href="musico">Music&amp;Co</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a class="nav-link" href="signup.html">Sign Up</a>
+              <a class="nav-link" href="/musico_register">Sign Up</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">Log In</a>
@@ -63,7 +64,7 @@
         <div class="row align-items-center">
           <div class="col-lg-6 order-lg-2">
             <div class="p-5">
-              <img class="img-fluid rounded-circle" src="img/01.jpg" alt="">
+              <img class="img-fluid rounded-circle" src="{% static 'media/01.jpg' %}" alt="">
             </div>
           </div>
           <div class="col-lg-6 order-lg-1">
@@ -81,7 +82,7 @@
         <div class="row align-items-center">
           <div class="col-lg-6">
             <div class="p-5">
-              <img class="img-fluid rounded-circle" src="img/02.jpg" alt="">
+              <img class="img-fluid rounded-circle" src="{% static 'media/02.jpg' %}" alt="">
             </div>
           </div>
           <div class="col-lg-6">
@@ -99,7 +100,7 @@
         <div class="row align-items-center">
           <div class="col-lg-6 order-lg-2">
             <div class="p-5">
-              <img class="img-fluid rounded-circle" src="img/03.jpg" alt="">
+              <img class="img-fluid rounded-circle" src="{% static 'media/03.jpg' %}" alt="">
             </div>
           </div>
           <div class="col-lg-6 order-lg-1">

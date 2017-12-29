@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
     {% load staticfiles %}
 
     <meta charset="utf-8">
@@ -15,114 +15,165 @@
 
     <!-- Custom fonts for this template -->
     <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i"
+          rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/one-page-wonder.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
 
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
-      <div class="container">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container">
         <a class="navbar-brand" href="musico">Music&amp;Co</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/musico_register">Sign Up</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Log In</a>
-            </li>
-          </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/musico_register">Connect</a>
+                </li>
+            </ul>
         </div>
-      </div>
-    </nav>
+    </div>
+</nav>
 
-    <header class="masthead text-center text-white">
-      <div class="masthead-content">
+<header class="masthead text-center text-white">
+    <div class="masthead-content">
         <div class="container">
-          <h1 class="masthead-heading mb-0">Music&amp;Co</h1>
-          <h2 class="masthead-subheading mb-0">We Would Love To Have You On Board!</h2>
-    	<br><div class="container" style="
+            <h1 class="masthead-heading mb-0">Music&amp;Co</h1>
+            <h2 class="masthead-subheading mb-0">We Would Love To Have You On Board!</h2>
+            <br>
+            <div class="container" style="
 ">
-        <div class="row centered-form" style="">
-        <div class="" style="
+                <div class="row centered-form" style="">
+                    <div class="" style="
     margin: auto;
 ">
-        	<div class="panel panel-default">
-        		<div class="panel-heading">
-			    		<h3 class="panel-title">Please sign up for Music&amp;Co <small>It's free!</small></h3>
-			 			</div>
-			 			<div class="panel-body">
-			    		<form role="form">
-			    			<div class="row">
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			                <input type="text" name="first_name" id="first_name" class="form-control input-sm" placeholder="First Name">
-			    					</div>
-			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="text" name="last_name" id="last_name" class="form-control input-sm" placeholder="Last Name">
-			    					</div>
-			    				</div>
-			    			</div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="overlay">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Welcome Back To Music&Co
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <form role="form">
+                                                <div class="form-group">
+                                                    <input type="text" name="username" id="username-login"
+                                                           class="form-control input-sm" placeholder="User Name">
+                                                </div>
 
-							<div class="form-group">
-			    				<input type="text" name="username" id="username" class="form-control input-sm" placeholder="Display Name">
-			    			</div>
-							
-			    			<div class="form-group">
-			    				<input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
-			    			</div>
+                                                <div class="form-group">
+                                                    <input type="password" name="password" id="password-login"
+                                                           class="form-control input-sm" placeholder="Password">
+                                                </div>
 
-			    			<div class="row">
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="password" name="password" id="password" class="form-control input-sm" placeholder="Password">
-			    					</div>
-			    				</div>
-			    				<div class="col-xs-6 col-sm-6 col-md-6">
-			    					<div class="form-group">
-			    						<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-sm" placeholder="Confirm Password">
-			    					</div>
-			    				</div>
-			    			</div>
-			    			
-			    			
-			    		
-			    		<input type="submit" value="Register Me!" href="#" style="cursor: pointer" class="btn btn-primary btn-xl rounded-pill mt-5"></input></form>
-			    	</div>
-	    		</div>
-    		</div>
-    	</div>
-    </div>
-          
+                                                <input type="submit" value="Login" href="#" style="cursor: pointer"
+                                                       class="btn btn-primary btn-xl rounded-pill mt-5"></input></form>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                <div class="col">
+                                    <div class="overlay">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Sign up for Music&amp;Co
+                                                <small>It's free!</small>
+                                            </h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <form role="form">
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 col-md-6">
+                                                        <div class="form-group">
+                                                            <input type="text" name="first_name" id="first_name"
+                                                                   class="form-control input-sm"
+                                                                   placeholder="First Name">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 col-md-6">
+                                                        <div class="form-group">
+                                                            <input type="text" name="last_name" id="last_name"
+                                                                   class="form-control input-sm"
+                                                                   placeholder="Last Name">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <input type="text" name="username" id="username"
+                                                           class="form-control input-sm" placeholder="Display Name">
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <input type="email" name="email" id="email"
+                                                           class="form-control input-sm" placeholder="Email Address">
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-xs-6 col-sm-6 col-md-6">
+                                                        <div class="form-group">
+                                                            <input type="password" name="password" id="password"
+                                                                   class="form-control input-sm" placeholder="Password">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-6 col-sm-6 col-md-6">
+                                                        <div class="form-group">
+                                                            <input type="password" name="password_confirmation"
+                                                                   id="password_confirmation"
+                                                                   class="form-control input-sm"
+                                                                   placeholder="Confirm Password">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <input type="submit" value="Register Me!" href="#"
+                                                       style="cursor: pointer"
+                                                       class="btn btn-primary btn-xl rounded-pill mt-5"></input></form>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="bg-circle-1 bg-circle"></div>
-      <div class="bg-circle-2 bg-circle"></div>
-      <div class="bg-circle-3 bg-circle"></div>
-      <div class="bg-circle-4 bg-circle"></div>
-    </header>
 
-    <!-- Footer -->
-    <footer class="py-5 bg-black">
-      <div class="container">
+    </div>
+    </div>
+    <div class="bg-circle-1 bg-circle"></div>
+    <div class="bg-circle-2 bg-circle"></div>
+    <div class="bg-circle-3 bg-circle"></div>
+    <div class="bg-circle-4 bg-circle"></div>
+</header>
+
+<!-- Footer -->
+<footer class="py-5 bg-black">
+    <div class="container">
         <p class="m-0 text-center text-white small">Copyright © Music&amp;Co 2017-18 TAU</p>
-    <p class="m-0 text-center text-white small">Prepared (?) Statements</p><p>
-      </p></div>
-      <!-- /.container -->
-    </footer>
+        <p class="m-0 text-center text-white small">Prepared (?) Statements</p>
+        <p>
+        </p></div>
+    <!-- /.container -->
+</footer>
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<!-- Bootstrap core JavaScript -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
-</body></html>
+</body>
+</html>

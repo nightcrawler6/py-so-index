@@ -1,27 +1,105 @@
 #first_view {
-	color: #c52630;
+    color: #c52630;
 }
 
-#second_view{
-	color: #386d8d;
+#second_view {
+    color: #386d8d;
 }
 
-#third_view{
-	color: #d43e86;
+#third_view {
+    color: #d43e86;
 }
 
 a:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 
-#first_view:hover{
-	color: #770b12;
+#first_view:hover {
+    color: #770b12;
 }
 
-#second_view:hover{
-	color: #0e5986;
+#second_view:hover {
+    color: #0e5986;
 }
 
-#third_view:hover{
-	color: #c11769;
+#third_view:hover {
+    color: #c11769;
 }
+
+#login-dp {
+    min-width: 250px;
+    padding: 14px 14px 0;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, .8);
+}
+
+#login-dp .help-block {
+    font-size: 12px
+}
+
+#login-dp .bottom {
+    background-color: rgba(255, 255, 255, .8);
+    border-top: 1px solid #ddd;
+    clear: both;
+    padding: 14px;
+}
+
+#login-dp .social-buttons {
+    margin: 12px 0
+}
+
+#login-dp .social-buttons a {
+    width: 49%;
+}
+
+#login-dp .form-group {
+    margin-bottom: 10px;
+}
+
+.btn-fb {
+    color: #fff;
+    background-color: #3b5998;
+}
+
+.btn-fb:hover {
+    color: #fff;
+    background-color: #496ebc
+}
+
+.btn-tw {
+    color: #fff;
+    background-color: #55acee;
+}
+
+.btn-tw:hover {
+    color: #fff;
+    background-color: #59b5fa;
+}
+
+@media (max-width: 768px) {
+    #login-dp {
+        background-color: inherit;
+        color: #fff;
+    }
+
+    #login-dp .bottom {
+        background-color: inherit;
+        border-top: 0 none;
+    }
+}
+
+.col {
+    padding: 60px;
+}
+
+.overlay {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.18); /*dim the background*/
+	border-radius: 20px;
+    padding: 20px;
+}
+

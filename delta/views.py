@@ -5,21 +5,14 @@ from DBProjectDelta.settings import BASE_DIR, CACHE_SIZE
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.cache import never_cache
+from django.db import connection
+import datetime
 
 import json
 from cache import Cache
 
 # init cache singletone
 cache = Cache(CACHE_SIZE)
-
-#for reference ONLY!
-#@ensure_csrf_cookie
-#@never_cache
-#def so_index(request):
-#    if request.session.has_key('username'):
-#        return render(request, 'so-index.html')
-#    else:
-#        return render(request, 'test_login.html')
 
 @ensure_csrf_cookie
 @never_cache
@@ -91,39 +84,34 @@ def register_user(request):
         else:
             return redirect("/musico_register")
 
-def signup(request):
-    if request.session.has_key('username'):
-        print request.session['username']
-        return redirect("home-view")
-    if request.method == "GET":
-        return render(request, 'test_login.html')
-    else:
-        response = {'response':None}
-        credentials_unicode = request.body.decode('utf-8')
-        credentials = json.loads(credentials_unicode)
-        user = credentials['user']
-        password = credentials['password']
-        userobj = User.objects.get(username=user)
-        # user, created = User.objects.get_or_create(username=user)
-        '''if user:
-            user.set_password(password)
-            user.save()
-            request.session['username'] = credentials['user']
-            response['response'] = 'added successfully!'
-        else:'''
-        if userobj:
-            user = authenticate(username=user, password=password)
-            if user is not None:
-                request.session['username'] = credentials['user']
-                response['url'] = '/home'
-                return HttpResponse(json.dumps(response), content_type="application/json", status=200)
-            else:
-                response['url'] = '/signup'
-                return HttpResponse(json.dumps(response), content_type="application/json", status=200)
-        return HttpResponse(json.dumps(response), content_type="application/json", status=200)
-
 def logout_user(request):
     if request.session.has_key('username'):
         logout(request)
         # del request.session['username']
     return redirect("/musico")
+
+
+############################# Private methods - DB #############3
+
+def get_personal_playlists(request):
+    with connection.cursor() as cursor:
+        query = "SELECT DISTINCT playlist.PlaylistId, playlist.Username, playlist.Title, playlist.CreationDate, playlist.cover_uri \
+                    FROM auth_user, playlist \
+                    WHERE auth_user.username = playlist.Username AND \
+                    auth_user.username = '{0}';".format(request.user)
+        cursor.execute(query)
+        row = cursor.fetchall();
+
+        response = []
+
+        for tup in row:
+            entry = {}
+            entry['id'] = tup[0]
+            entry['user'] = tup[1]
+            entry['title'] = tup[2]
+
+            date = tup[3]
+            entry['created_on'] = "{}-{}-{}".format(date.year, date.month, date.day)
+            entry['cover_uri'] = tup[4]
+            response.append(entry)
+        return HttpResponse(json.dumps(response), content_type="application/json", status=200)

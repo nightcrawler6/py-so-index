@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^signout', logout_user, name="logout_user"),
     url(r'^login', login_user, name="login_user"),
     url(r'^playlists_studio', playlists, name="manage_playlist"),
+    url(r'^get_my_playlists', get_personal_playlists, name="test"),
 ]

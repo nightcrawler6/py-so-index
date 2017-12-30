@@ -40,6 +40,8 @@ function buildPlaylistView(raw_data) {
         var playlistObject = raw_data[i];
 
         var col = $("<div id='" + playlistObject.id + "' class='col-lg-3 col-md-6 mb-3 play'></div>");
+        col.data('playlist-id', playlistObject.id);
+
         var card = $("<div class='card'></div>");
 
         var link = $("<a href='#'></a>");
@@ -75,7 +77,7 @@ function registerTransitions() {
         var toHide = [];
         for (var i = 0; i < allCards.length; i++) {
             var cur = allCards[i];
-            if (cur.id == objId) {
+            if ($(cur).data('playlist-id') == $(obj).data('playlist-id')) {
                 continue;
             }
             else {

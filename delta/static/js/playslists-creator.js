@@ -15,25 +15,12 @@ $(document).ready(function () {
     });
 });
 
-/*<div id="01" class="col-lg-3 col-md-6 mb-3 play">
-                    <div class="card">
-                        <a href="#"><img class="card-img-top"
-                                         src="https://upload.wikimedia.org/wikipedia/en/thumb/d/dc/Damn._Kendrick_Lamar.jpg/220px-Damn._Kendrick_Lamar.jpg"
-                                         alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                Kendrick Beast Mode!
-                            </h4>
-                            <h5>12 Tracks</h5>
-                            <p class="card-text">Total Duration: 1.9 Hours</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Public | (30 Likes)</small>
-                        </div>
-                    </div>
-                </div>*/
-
-
+/***
+ * Builds a set of playlist cards given raw data received from the server and attaches them directly
+ * to html page
+ * @param raw_data
+ *      raw data containing basic playlist info
+ */
 function buildPlaylistView(raw_data) {
     var container = $('.row')[1];
     for(var i in raw_data){
@@ -68,6 +55,12 @@ function buildPlaylistView(raw_data) {
     }
 }
 
+/***
+ * Iterates over all the card elements and registers the on click handler
+ * The handler defines the following behavior:
+ *      hide every other element that is different than clicked
+ *      display table with songs in playlist (card element)
+ */
 function registerTransitions() {
     $('.play a').on("click", function (event) {
         var obj = $(event.target).parent().parent().parent()[0];
@@ -98,6 +91,12 @@ function registerTransitions() {
     })
 }
 
+/***
+ * Retrieves the cookie name set on current page
+ * @param c_name
+ *      name of cookie entry
+ * @returns {*}
+ */
 function getCookie(c_name) {
     if (document.cookie.length > 0) {
         c_start = document.cookie.indexOf(c_name + "=");

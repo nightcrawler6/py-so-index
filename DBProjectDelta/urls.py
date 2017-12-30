@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^signup', register_user, name="register_new_user"),
     url(r'^signout', logout_user, name="logout_user"),
     url(r'^login', login_user, name="login_user"),
+    url(r'^playlists_studio', playlists, name="manage_playlist"),
 ]

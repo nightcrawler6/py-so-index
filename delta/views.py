@@ -28,6 +28,12 @@ def musico(request):
     context = {"authenticated": isAuth, "user": request.user}
     return render(request, "index.html", context)
 
+def playlists(request):
+    isAuth = request.user.is_authenticated()
+    if isAuth:
+        context = {"authenticated": isAuth, "user": request.user}
+        return render(request, "playlists-creator.html", context)
+    return redirect("/musico_register")
 
 @ensure_csrf_cookie
 @never_cache

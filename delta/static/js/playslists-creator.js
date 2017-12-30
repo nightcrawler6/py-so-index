@@ -23,7 +23,7 @@ $(document).ready(function () {
  */
 function buildPlaylistView(raw_data) {
     var container = $('.row')[1];
-    for(var i in raw_data){
+    for (var i in raw_data) {
         var playlistObject = raw_data[i];
 
         var col = $("<div id='" + playlistObject.id + "' class='col-lg-3 col-md-6 mb-3 play'></div>");
@@ -83,12 +83,72 @@ function registerTransitions() {
             }
         }
         if ($("#amazing-table").css('display') == 'none') {
-            $($("#amazing-table")[0]).fadeIn();
+            var playlistid = $(obj).data('playlist-id');
+            data = {
+                'playlistId': playlistid
+            }
+            $.ajax({
+                type: "POST",
+                url: "/get_playlist_songs",
+                data: JSON.stringify(data),
+                headers: {"X-CSRFToken": getCookie("csrftoken")},
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    buildSongsTable(response, $($("#amazing-table")[0]));
+                    $($("#amazing-table")[0]).fadeIn();
+                },
+                error: function () {
+                    alert("something went wrong...")
+                }
+            });
         }
         else {
+            $('.table').remove();
             $($("#amazing-table")[0]).css('display', 'none');
         }
     })
+}
+
+function buildSongsTable(raw_data, container){
+    var table = $('<table class="table"></table>');
+    var thead = $('<thead><tr></tr></thead>');
+    var trhead = $('<tr></tr>')
+    var col1 = $('<td scope="col">#</td>');
+    var col2 = $('<td scope="col">Title</td>');
+    var col3 = $('<td scope="col">Duration</td>');
+    var col4 = $('<td scope="col">Artist</td>');
+    var col5 = $('<td scope="col">Album</td>');
+    $(trhead).append(col1);
+    $(trhead).append(col2);
+    $(trhead).append(col3);
+    $(trhead).append(col4);
+    $(trhead).append(col5);
+    $(thead).append(trhead);
+    $(table).append(thead);
+    var tbody = $('<tbody></tbody>');
+    for(var i in raw_data){
+        var songobj = raw_data[i];
+        var tr = $('<tr></tr>');
+        var col1 = $('<th></th>');
+        var delbtn = $('<button type="button" class="btn btn-danger" style="margin-top:3px">X</button>');
+        $(delbtn).data('songid', songobj.id);
+        $(delbtn).on("click", function(){
+           alert($(this).data('songid'));
+        });
+        $(col1).append(delbtn);
+        var col2 = $('<td>' + songobj.title + '</td>');
+        var col3 = $('<td>' + songobj.duration + '</td>');
+        var col4 = $('<td>' + songobj.artist + '</td>');
+        var col5 = $('<td>' + songobj.album + '</td>');
+        $(tr).append(col1);
+        $(tr).append(col2);
+        $(tr).append(col3);
+        $(tr).append(col4);
+        $(tr).append(col5);
+        $(tbody).append(tr);
+    }
+    $(table).append(tbody);
+    $(container).append(table);
 }
 
 /***

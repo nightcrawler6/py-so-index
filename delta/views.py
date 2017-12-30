@@ -115,3 +115,32 @@ def get_personal_playlists(request):
             entry['cover_uri'] = tup[4]
             response.append(entry)
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
+
+def get_songs_in_playlist(request):
+    with connection.cursor() as cursor:
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        playlistId = body['playlistId']
+        query = "SELECT song.SongId, song.Title, song.Duration,  artist.Name, album.Title \
+                    FROM playlist, playlist_song, song, artist, album \
+                    WHERE playlist.PlaylistId=playlist_song.PlaylistId AND \
+                    playlist_song.SongId=song.SongId AND \
+                    song.ArtistId=artist.ArtistId AND \
+                    song.AlbumId=album.AlbumId AND \
+                    playlist.PlaylistId='{0}';".format(playlistId)
+
+        cursor.execute(query)
+        row = cursor.fetchall();
+
+        response = []
+
+        for tup in row:
+            entry = {}
+            entry['id'] = tup[0]
+            entry['title'] = tup[1]
+            entry['duration'] = tup[2]
+            entry['artist'] = tup[3]
+            entry['album'] = tup[4]
+            response.append(entry)
+
+        return HttpResponse(json.dumps(response), content_type="application/json", status=200)

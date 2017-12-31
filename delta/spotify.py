@@ -36,7 +36,7 @@ if curr_timestamp - prev_timestamp >= 3600:
 
     access_token = parsed['access_token']
 
-    print "new token acquired - writing: " + str(curr_timestamp) + '-' + access_token
+    print "new token acquired - writing: " + str(curr_timestamp) + '$$$' + access_token
 
     expiry_file_handle = open(EXPIRY,'w')
     expiry_file_handle.write(str(curr_timestamp)+'-'+access_token)

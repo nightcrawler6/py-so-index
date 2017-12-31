@@ -31,6 +31,9 @@ def playlists(request):
 @ensure_csrf_cookie
 @never_cache
 def musico_register(request):
+    isAuth = request.user.is_authenticated()
+    if isAuth:
+        return redirect("/musico")
     return render(request, 'signup.html')
 
 @ensure_csrf_cookie

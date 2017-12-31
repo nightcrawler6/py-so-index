@@ -26,6 +26,9 @@
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <button type="button" class="btn btn-info" style="cursor:pointer" data-toggle="modal" data-target="#myModal">
+            Create Playlist
+        </button>
         <div class="navbar-collapse collapse" id="navbarResponsive" style="">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
@@ -45,8 +48,8 @@
 
 <!-- Page Content -->
 <div class="container">
-    <form class="form-wrapper cf">
-        <input type="text" placeholder="Search here..." required="">
+    <form class="form-wrapper cf" style="display:none">
+        <input id="search-bar" type="text" placeholder="Search songs to add in this playlist..." required="">
     </form>
     <div class="row">
         <!-- /.col-lg-3 -->
@@ -144,6 +147,65 @@
 
 </div>
 <!-- /.container -->
+
+<!-- dynamic songs search modal -->
+<div class="modal fade" id="searchModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Search Results </h4>
+                <button style="cursor:pointer" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div id="search-table-modal" class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- The Create Playlist Modal -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Create a new playlist</h4>
+                <button style="cursor:pointer" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form class="form-horizontal" method="post" action="/create_playlist"> {% csrf_token %}
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="title">Title:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="title" id="title"
+                                   placeholder="Enter Title">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="photo-album">Photo URI:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="photo-album" id="photo-album"
+                                   placeholder="Enter Display Cover URI">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" style="cursor:pointer" class="btn btn-success">Create Me!</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <!-- Footer -->
 <footer class="py-5 bg-dark">

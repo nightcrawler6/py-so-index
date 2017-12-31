@@ -91,3 +91,9 @@ body {
     font-size: 1rem;
     font-weight: 700;
 }
+
+.table td,
+.table th {
+    color:#054a92b8;
+    background:#5080ab14;
+}

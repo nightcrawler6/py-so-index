@@ -13,6 +13,36 @@ $(document).ready(function () {
             alert("something went wrong...")
         }
     });
+
+    $('.cf').keypress(function (e) {
+        var key = e.which;
+        if (key == 13)  // the enter key code
+        {
+            e.preventDefault();
+            if ($('.cf').data('active-playlist') != undefined) {
+                var query_string = $('#search-bar').val();
+                $('#search-bar').val('');
+                $('#searchModal h4').text("Results for: " + query_string);
+                var data = {
+                    'search_string': query_string
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/search_songs",
+                    data: JSON.stringify(data),
+                    headers: {"X-CSRFToken": getCookie("csrftoken")},
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+                        buildSongsTable(response, $('#search-table-modal')[0], false);
+                        $("#searchModal").modal('show');
+                    },
+                    error: function () {
+                        alert("something went wrong...")
+                    }
+                });
+            }
+        }
+    });
 });
 
 /***
@@ -43,7 +73,7 @@ function buildPlaylistView(raw_data) {
         $(cardbody).append(cardtracks);
         $(cardbody).append(cardtext);
 
-        var cardfoot = $("<div class='card-footer'><small class='text-muted'>" + playlistObject.created_on + "</small></div>");
+        var cardfoot = $("<div class='card-footer'><small class='text-muted'>Created on: " + playlistObject.created_on + "</small></div>");
 
         $(card).append(link);
         $(card).append(cardbody);
@@ -65,23 +95,7 @@ function registerTransitions() {
     $('.play a').on("click", function (event) {
         var obj = $(event.target).parent().parent().parent()[0];
 
-        var objId = obj.id;
-        var allCards = $('.play');
-        var toHide = [];
-        for (var i = 0; i < allCards.length; i++) {
-            var cur = allCards[i];
-            if ($(cur).data('playlist-id') == $(obj).data('playlist-id')) {
-                continue;
-            }
-            else {
-                if ($(cur).css('display') == 'none') {
-                    $(cur).css('display', 'block');
-                }
-                else {
-                    $(cur).css('display', 'none');
-                }
-            }
-        }
+
         if ($("#amazing-table").css('display') == 'none') {
             var playlistid = $(obj).data('playlist-id');
             data = {
@@ -94,8 +108,12 @@ function registerTransitions() {
                 headers: {"X-CSRFToken": getCookie("csrftoken")},
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
-                    buildSongsTable(response, $($("#amazing-table")[0]));
+                    toggleAll(obj, function () {
+                    });
+                    buildSongsTable(response, $($("#amazing-table")[0]), true);
                     $($("#amazing-table")[0]).fadeIn();
+                    $('.cf').slideDown();
+                    $('.cf').data('active-playlist', playlistid);
                 },
                 error: function () {
                     alert("something went wrong...")
@@ -105,19 +123,47 @@ function registerTransitions() {
         else {
             $('.table').remove();
             $($("#amazing-table")[0]).css('display', 'none');
+            toggleAll(obj);
+            $('.cf').slideUp();
+            $('.cf').removeData('active-playlist');
         }
     })
 }
 
-function buildSongsTable(raw_data, container){
+function toggleAll(obj) {
+    var objId = obj.id;
+    var allCards = $('.play');
+    var toHide = [];
+    for (var i = 0; i < allCards.length; i++) {
+        var cur = allCards[i];
+        if ($(cur).data('playlist-id') == $(obj).data('playlist-id')) {
+            continue;
+        }
+        else {
+            if ($(cur).css('display') == 'none') {
+                $(cur).css('display', 'block');
+            }
+            else {
+                $(cur).css('display', 'none');
+            }
+        }
+    }
+}
+
+function buildSongsTable(raw_data, container, isDelete) {
+    $(container).empty();
+    var buttonType = 'btn btn-success';
+    if (isDelete) {
+        buttonType = 'btn btn-danger';
+    }
     var table = $('<table class="table"></table>');
-    var thead = $('<thead><tr></tr></thead>');
+    var thead = $('<thead></thead>');
     var trhead = $('<tr></tr>')
-    var col1 = $('<td scope="col">#</td>');
-    var col2 = $('<td scope="col">Title</td>');
-    var col3 = $('<td scope="col">Duration</td>');
-    var col4 = $('<td scope="col">Artist</td>');
-    var col5 = $('<td scope="col">Album</td>');
+    var col1 = $('<th scope="col">#</th>');
+    var col2 = $('<th scope="col">Title</th>');
+    var col3 = $('<th scope="col">Duration</th>');
+    var col4 = $('<th scope="col">Artist</th>');
+    var col5 = $('<th scope="col">Album</th>');
     $(trhead).append(col1);
     $(trhead).append(col2);
     $(trhead).append(col3);
@@ -126,15 +172,23 @@ function buildSongsTable(raw_data, container){
     $(thead).append(trhead);
     $(table).append(thead);
     var tbody = $('<tbody></tbody>');
-    for(var i in raw_data){
+    for (var i in raw_data) {
         var songobj = raw_data[i];
         var tr = $('<tr></tr>');
         var col1 = $('<th></th>');
-        var delbtn = $('<button type="button" class="btn btn-danger" style="margin-top:3px">X</button>');
+        var delbtn = $('<button type="button" class="' + buttonType + '" style="margin-top:3px; cursor:pointer">X</button>');
         $(delbtn).data('songid', songobj.id);
-        $(delbtn).on("click", function(){
-           alert($(this).data('songid'));
-        });
+        if (isDelete) {
+            $(delbtn).on("click", function () {
+                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(delbtn).data('songid'));
+            });
+        }
+        else {
+            $(delbtn).on("click", function () {
+                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(delbtn).data('songid'));
+            });
+        }
+
         $(col1).append(delbtn);
         var col2 = $('<td>' + songobj.title + '</td>');
         var col3 = $('<td>' + songobj.duration + '</td>');
@@ -149,6 +203,49 @@ function buildSongsTable(raw_data, container){
     }
     $(table).append(tbody);
     $(container).append(table);
+}
+
+function editPlaylist(isDelete, playlistId, songId) {
+    var servlet = "";
+    var containerId = "";
+    if (!isDelete) {
+        servlet = "/add_song_to_playlist";
+    }
+    else {
+        servlet = "/remove_song_from_playlist";
+    }
+    data = {
+        'playlistId': playlistId,
+        'songId': songId
+    }
+    $.ajax({
+        type: "POST",
+        url: servlet,
+        data: JSON.stringify(data),
+        headers: {"X-CSRFToken": getCookie("csrftoken")},
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            $('#searchModal').modal('hide');
+            $.ajax({
+                type: "POST",
+                url: "/get_playlist_songs",
+                data: JSON.stringify(data),
+                headers: {"X-CSRFToken": getCookie("csrftoken")},
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    buildSongsTable(response, $($("#amazing-table")[0]), true);
+                    $($("#amazing-table")[0]).fadeIn();
+                    $('.cf').slideDown();
+                },
+                error: function () {
+                    alert("something went wrong...")
+                }
+            });
+        },
+        error: function () {
+            alert("something went wrong...")
+        }
+    });
 }
 
 /***

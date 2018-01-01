@@ -34,4 +34,5 @@ urlpatterns = [
     url(r'^search_songs', get_songs_by_search, name="search_songs"),
     url(r'^add_song_to_playlist', add_song_to_playlist, name="add_song"),
     url(r'^remove_song_from_playlist', delete_song_from_playlist, name="delete_song"),
+    url(r'^get_popular_genre_user', get_most_listened_genre_by_user, name="most_popular_genre"),
 ]

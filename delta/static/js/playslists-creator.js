@@ -180,12 +180,14 @@ function buildSongsTable(raw_data, container, isDelete) {
         $(delbtn).data('songid', songobj.id);
         if (isDelete) {
             $(delbtn).on("click", function () {
-                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(delbtn).data('songid'));
+                //alert($(this).data('songid'));
+                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(this).data('songid'));
             });
         }
         else {
             $(delbtn).on("click", function () {
-                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(delbtn).data('songid'));
+                //alert($(this).data('songid'));
+                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(this).data('songid'));
             });
         }
 
@@ -233,9 +235,10 @@ function editPlaylist(isDelete, playlistId, songId) {
                 headers: {"X-CSRFToken": getCookie("csrftoken")},
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
-                    buildSongsTable(response, $($("#amazing-table")[0]), true);
-                    $($("#amazing-table")[0]).fadeIn();
-                    $('.cf').slideDown();
+                    $($("#amazing-table")[0]).fadeOut('slow', function(){
+                        buildSongsTable(response, $($("#amazing-table")[0]), true);
+                        $($("#amazing-table")[0]).fadeIn();
+                    });
                 },
                 error: function () {
                     alert("something went wrong...")

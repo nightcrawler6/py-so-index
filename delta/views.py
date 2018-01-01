@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.cache import never_cache
 from django.db import connection
 import datetime
+import queries
 
 import json
 from cache import Cache
@@ -109,10 +110,7 @@ def add_playlist_user_space(request):
     date = '{}-{}-{}'.format(fulldate.year, fulldate.month, fulldate.day)
 
     with connection.cursor() as cursor:
-        query = "INSERT INTO playlist \
-                    (Username, Title, CreationDate, cover_uri) \
-                    VALUES \
-                    ('{}', '{}', '{}', '{}')".format(username, title, date, album_uri)
+        query = queries.add_playlist_to_user_query.format(username, title, date, album_uri)
         cursor.execute(query)
     return redirect('/playlists_studio')
 
@@ -123,10 +121,7 @@ def get_personal_playlists(request):
         return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
 
     with connection.cursor() as cursor:
-        query = "SELECT DISTINCT playlist.PlaylistId, playlist.Username, playlist.Title, playlist.CreationDate, playlist.cover_uri \
-                    FROM auth_user, playlist \
-                    WHERE auth_user.username = playlist.Username AND \
-                    auth_user.username = '{0}';".format(request.user)
+        query = queries.get_personal_playlists_query.format(request.user)
         cursor.execute(query)
         row = cursor.fetchall();
 
@@ -144,6 +139,7 @@ def get_personal_playlists(request):
             response.append(entry)
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
 
+
 def get_songs_in_playlist(request):
     isAuth = request.user.is_authenticated()
     if not isAuth:
@@ -153,13 +149,8 @@ def get_songs_in_playlist(request):
         body_unicode = request.body.decode('utf-8')
         body = json.loads(body_unicode)
         playlistId = body['playlistId']
-        query = "SELECT song.SongId, song.Title, song.Duration,  artist.Name, album.Title \
-                    FROM playlist, playlist_song, song, artist, album \
-                    WHERE playlist.PlaylistId=playlist_song.PlaylistId AND \
-                    playlist_song.SongId=song.SongId AND \
-                    song.ArtistId=artist.ArtistId AND \
-                    song.AlbumId=album.AlbumId AND \
-                    playlist.PlaylistId='{0}';".format(playlistId)
+
+        query = queries.get_songs_in_playlist_query.format(playlistId)
 
         cursor.execute(query)
         row = cursor.fetchall();
@@ -173,9 +164,11 @@ def get_songs_in_playlist(request):
             entry['duration'] = tup[2]
             entry['artist'] = tup[3]
             entry['album'] = tup[4]
+            entry['category'] = tup[5]
             response.append(entry)
 
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
+
 
 def get_songs_by_search(request):
     isAuth = request.user.is_authenticated()
@@ -186,11 +179,7 @@ def get_songs_by_search(request):
         body = json.loads(body_unicode)
         search = body['search_string']
 
-        query = "SELECT song.SongId, song.Title, song.Duration, song.PublicDate, song.Views, artist.Name, album.Title \
-                    FROM song, artist, album \
-                    WHERE song.ArtistId=artist.ArtistId AND \
-                    song.AlbumId=album.AlbumId AND \
-                    (song.Title LIKE '%{0}%' OR artist.Name LIKE '%{0}%' OR album.Title LIKE '%{0}%');".format(search)
+        query = queries.get_songs_by_search_query.format(search)
 
         cursor.execute(query)
         row = cursor.fetchall();
@@ -209,10 +198,12 @@ def get_songs_by_search(request):
             entry['views'] = tup[4]
             entry['artist'] = tup[5]
             entry['album'] = tup[6]
+            entry['category'] = tup[7]
 
             response.append(entry)
 
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
+
 
 def add_song_to_playlist(request):
     isAuth = request.user.is_authenticated()
@@ -225,12 +216,10 @@ def add_song_to_playlist(request):
         playlistId = body['playlistId']
         songId = body['songId']
 
-        query = "INSERT INTO playlist_song (PlaylistId, SongId) \
-                  VALUES \
-                  ({},{});".format(playlistId, songId)
+        query = queries.add_song_to_playlist_query.format(playlistId, songId)
 
         cursor.execute(query)
-        row = cursor.fetchall();
+        row = cursor.fetchall()
         return HttpResponse(json.dumps({'status': 'success'}), content_type="application/json", status=200)
 
 
@@ -245,10 +234,31 @@ def delete_song_from_playlist(request):
         playlistId = body['playlistId']
         songId = body['songId']
 
-        query = "DELETE FROM playlist_song \
-                    WHERE playlist_song.PlaylistId={} AND playlist_song.SongId={};".format(playlistId, songId)
+        query = queries.delete_song_from_playlist_query.format(playlistId, songId)
 
         cursor.execute(query)
-        row = cursor.fetchall();
+        row = cursor.fetchall()
         return HttpResponse(json.dumps({'status': 'success'}), content_type="application/json", status=200)
+
+
+def get_most_listened_genre_by_user(request):
+    isAuth = request.user.is_authenticated()
+    if not isAuth:
+        return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
+
+    with connection.cursor() as cursor:
+        query = queries.get_most_listened__genre_by_user_query.format(request.user)
+
+        cursor.execute(query)
+        row = cursor.fetchall()
+
+        response = []
+
+        for tup in row:
+            entry = {}
+            entry['category_name'] = tup[0]
+            entry['category_count'] = tup[1]
+
+            response.append(entry)
+        return HttpResponse(json.dumps(response), content_type="application/json", status=200)
 

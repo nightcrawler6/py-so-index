@@ -14,6 +14,19 @@ $(document).ready(function () {
         }
     });
 
+    $.ajax({
+        type: "GET",
+        url: "/get_popular_genre_user",
+        headers: {"X-CSRFToken": getCookie("csrftoken")},
+        contentType: 'application/json; charset=utf-8',
+        success: function (response) {
+            console.log(response);
+        },
+        error: function () {
+            alert("something went wrong...")
+        }
+    });
+
     $('.cf').keypress(function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code

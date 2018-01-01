@@ -39,7 +39,7 @@ add_playlist_to_user_query = "INSERT INTO playlist \
                                 VALUES \
                                 ('{}', '{}', '{}', '{}')"
 
-get_most_listened__genre_by_user_query = "select ghost.name, frequency from ( \
+most_listened_genre_by_user_query = "select ghost.name, frequency from ( \
                                         select count(*) as frequency, category.name, category.categoryId as inner_id \
                                         from auth_user, playlist, playlist_song, song, category where \
                                         auth_user.username=playlist.Username AND \
@@ -59,4 +59,26 @@ get_most_listened__genre_by_user_query = "select ghost.name, frequency from ( \
                                                                 song.CategoryId=category.categoryId AND \
                                                                 auth_user.username='{0}' \
                                                                 group by category.categoryId \
+                                                                ) as ghost2 )"
+
+most_listened_artist_by_user_query = "select ghost.name, frequency from ( \
+                                        select count(*) as frequency, artist.name, artist.ArtistId as inner_id \
+                                        from auth_user, playlist, playlist_song, song, artist where \
+                                        auth_user.username=playlist.Username AND \
+                                        playlist.PlaylistId=playlist_song.PlaylistId AND \
+                                        song.SongId=playlist_song.SongId AND \
+                                        song.ArtistId=artist.ArtistId AND \
+                                        auth_user.username='{0}' \
+                                        group by artist.ArtistId \
+                                        ) as ghost, artist \
+                                    where inner_id=artist.ArtistId \
+                                    having frequency = (select max(temp) from( \
+                                                            select count(*) as temp \
+                                                                from auth_user, playlist, playlist_song, song, artist where \
+                                                                auth_user.username=playlist.Username AND \
+                                                                playlist.PlaylistId=playlist_song.PlaylistId AND \
+                                                                song.SongId=playlist_song.SongId AND \
+                                                                song.ArtistId=artist.ArtistId AND \
+                                                                auth_user.username='{0}' \
+                                                                group by artist.ArtistId \
                                                                 ) as ghost2 )"

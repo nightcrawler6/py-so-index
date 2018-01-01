@@ -247,7 +247,7 @@ def get_most_listened_genre_by_user(request):
         return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
 
     with connection.cursor() as cursor:
-        query = queries.get_most_listened__genre_by_user_query.format(request.user)
+        query = queries.most_listened_genre_by_user_query.format(request.user)
 
         cursor.execute(query)
         row = cursor.fetchall()
@@ -262,3 +262,24 @@ def get_most_listened_genre_by_user(request):
             response.append(entry)
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
 
+
+def get_most_listened_artist_by_user(request):
+    isAuth = request.user.is_authenticated()
+    if not isAuth:
+        return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
+
+    with connection.cursor() as cursor:
+        query = queries.most_listened_artist_by_user_query.format(request.user)
+
+        cursor.execute(query)
+        row = cursor.fetchall()
+
+        response = []
+
+        for tup in row:
+            entry = {}
+            entry['artist_name'] = tup[0]
+            entry['artist_count'] = tup[1]
+
+            response.append(entry)
+        return HttpResponse(json.dumps(response), content_type="application/json", status=200)

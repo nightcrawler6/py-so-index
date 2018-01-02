@@ -22,6 +22,15 @@ def musico(request):
     context = {"authenticated": isAuth, "user": request.user}
     return render(request, "index.html", context)
 
+@ensure_csrf_cookie
+@never_cache
+def community(request):
+    isAuth = request.user.is_authenticated()
+    if isAuth:
+        context = {"authenticated": isAuth, "user": request.user}
+        return render(request, "community.html", context)
+    return redirect("/musico_register")
+
 def playlists(request):
     isAuth = request.user.is_authenticated()
     if isAuth:
@@ -283,3 +292,42 @@ def get_most_listened_artist_by_user(request):
 
             response.append(entry)
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
+
+
+def get_number_of_playlists(request):
+    isAuth = request.user.is_authenticated()
+    if not isAuth:
+        return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
+
+    with connection.cursor() as cursor:
+        query = queries.number_of_playlists_user_query.format(request.user)
+
+        cursor.execute(query)
+        row = cursor.fetchone()
+
+        response = {}
+        response['count'] = row[0]
+        return HttpResponse(json.dumps(response), content_type="application/json", status=200)
+
+
+def fake_shit(request):
+    response = []
+    entry1 = {}
+    entry2 = {}
+    entry1['username'] = 'nightcrawler'
+    entry1['first_name'] = 'Karim'
+    entry1['last_name'] = 'Mahamed'
+    entry1['popular_category'] = 'Rap'
+    entry1['popular_artist'] = 'Kendrick Lamar'
+    entry1['playlists_num'] = 5
+    entry2['username'] = 'adelz'
+    entry2['first_name'] = 'Adel'
+    entry2['last_name'] = 'Zoabi'
+    entry2['popular_category'] = 'Techno'
+    entry2['popular_artist'] = 'Akon'
+    entry2['playlists_num'] = 12
+
+    response.append(entry1)
+    response.append(entry2)
+    return HttpResponse(json.dumps(response), content_type="application/json", status=200)
+

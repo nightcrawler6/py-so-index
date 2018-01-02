@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^signout', logout_user, name="logout_user"),
     url(r'^login', login_user, name="login_user"),
     url(r'^playlists_studio', playlists, name="manage_playlist"),
+    url(r'^music_community', community, name="community"),
     url(r'^get_my_playlists', get_personal_playlists, name="playlists"),
     url(r'^get_playlist_songs', get_songs_in_playlist, name="songs"),
     url(r'^create_playlist', add_playlist_user_space, name="create_playlist"),
@@ -36,4 +37,5 @@ urlpatterns = [
     url(r'^remove_song_from_playlist', delete_song_from_playlist, name="delete_song"),
     url(r'^get_popular_genre_user', get_most_listened_genre_by_user, name="most_popular_genre"),
     url(r'^get_popular_artist_user', get_most_listened_artist_by_user, name="most_popular_artist"),
+    url(r'^mitigation', fake_shit, name="fakengay")
 ]

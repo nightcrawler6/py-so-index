@@ -82,3 +82,45 @@ most_listened_artist_by_user_query = "select ghost.name, frequency from ( \
                                                                 auth_user.username='{0}' \
                                                                 group by artist.ArtistId \
                                                                 ) as ghost2 )"
+
+get_most_popular_genre_all_users_query = "select f.username, f.name, f.frequency \
+                                            from(\
+                                                select username, max(frequency) as maximal_value\
+                                                from( \
+                                                    select auth_user.username, category.name, count(*) frequency\
+                                                    from auth_user join playlist on auth_user.username=playlist.Username \
+                                                    join playlist_song on playlist_song.PlaylistId=playlist.PlaylistId \
+                                                    join song on song.SongId=playlist_song.SongId \
+                                                    join category on category.categoryId=song.CategoryId \
+                                                    group by username, name) as ghost \
+                                                group by username \
+                                            ) as ghost2 inner join (select auth_user.username, category.name, count(*) frequency \
+                                                    from auth_user join playlist on auth_user.username=playlist.Username \
+                                                    join playlist_song on playlist_song.PlaylistId=playlist.PlaylistId\
+                                                    join song on song.SongId=playlist_song.SongId \
+                                                    join category on category.categoryId=song.CategoryId \
+                                                    group by username, name) as f on f.username = ghost2.username and f.frequency = ghost2.maximal_value "
+
+
+get_most_popular_artist_all_users_query = "select f.username, f.name, f.frequency \
+                                            from( \
+                                                select username, max(frequency) as maximal_value \
+                                                from( \
+                                                    select auth_user.username, artist.Name, count(*) frequency \
+                                                    from auth_user join playlist on auth_user.username=playlist.Username \
+                                                    join playlist_song on playlist_song.PlaylistId=playlist.PlaylistId\
+                                                    join song on song.SongId=playlist_song.SongId\
+                                                    join artist on artist.ArtistId=song.ArtistId\
+                                                    group by username, name) as ghost\
+                                                group by username\
+                                            ) as ghost2 inner join (select auth_user.username, artist.Name, count(*) frequency \
+                                                    from auth_user join playlist on auth_user.username=playlist.Username \
+                                                    join playlist_song on playlist_song.PlaylistId=playlist.PlaylistId\
+                                                    join song on song.SongId=playlist_song.SongId\
+                                                    join artist on artist.ArtistId=song.ArtistId\
+                                                    group by username, name) as f on f.username = ghost2.username and f.frequency = ghost2.maximal_value "
+
+number_of_playlists_user_query = "select count(*) \
+                                    from playlist, auth_user where \
+                                    playlist.Username = auth_user.username AND \
+                                    auth_user.username = '{}';"

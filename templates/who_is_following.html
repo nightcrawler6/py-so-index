@@ -28,10 +28,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/musico">Home</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a class="nav-link" href="/music_community">Community</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <a class="nav-link" href="/who_is_following">Who's Following Me?</a>
                 </li>
                 <li class="nav-item">
@@ -50,8 +50,8 @@
 <div class="container">
 
     <!-- Introduction Row -->
-    <h1 class="my-4">Discover
-        <small>It's Nice to Meet You!</small>
+    <h1 class="my-4">Spotlight
+        <small>See Who's Enjoying Your Picks!</small>
     </h1>
     <hr>
 
@@ -74,7 +74,7 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script>
-    $('html').data('who_is_following', false);
+    $('html').data('who_is_following', true);
 </script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'js/community.js' %}"></script>

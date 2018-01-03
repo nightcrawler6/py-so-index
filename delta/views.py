@@ -24,11 +24,27 @@ def musico(request):
 
 @ensure_csrf_cookie
 @never_cache
+def generator(request):
+    isAuth = request.user.is_authenticated()
+    context = {"authenticated": isAuth, "user": request.user}
+    return render(request, "generator.html", context)
+
+@ensure_csrf_cookie
+@never_cache
 def community(request):
     isAuth = request.user.is_authenticated()
     if isAuth:
         context = {"authenticated": isAuth, "user": request.user}
         return render(request, "community.html", context)
+    return redirect("/musico_register")
+
+@ensure_csrf_cookie
+@never_cache
+def who_is_following(request):
+    isAuth = request.user.is_authenticated()
+    if isAuth:
+        context = {"authenticated": isAuth, "user": request.user}
+        return render(request, "who_is_following.html", context)
     return redirect("/musico_register")
 
 def playlists(request):
@@ -310,24 +326,71 @@ def get_number_of_playlists(request):
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
 
 
-def fake_shit(request):
-    response = []
-    entry1 = {}
-    entry2 = {}
-    entry1['username'] = 'nightcrawler'
-    entry1['first_name'] = 'Karim'
-    entry1['last_name'] = 'Mahamed'
-    entry1['popular_category'] = 'Rap'
-    entry1['popular_artist'] = 'Kendrick Lamar'
-    entry1['playlists_num'] = 5
-    entry2['username'] = 'adelz'
-    entry2['first_name'] = 'Adel'
-    entry2['last_name'] = 'Zoabi'
-    entry2['popular_category'] = 'Techno'
-    entry2['popular_artist'] = 'Akon'
-    entry2['playlists_num'] = 12
+def populate_users_preview_data(request):
+    isAuth = request.user.is_authenticated()
+    if not isAuth:
+        return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
 
-    response.append(entry1)
-    response.append(entry2)
-    return HttpResponse(json.dumps(response), content_type="application/json", status=200)
+    current_user = request.user
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    who_is_following_view = body['view']
 
+    with connection.cursor() as cursor:
+        popular_artists_query = queries.get_most_popular_artist_all_users_query.format(current_user.username)
+        popular_genre_query = queries.get_most_popular_genre_all_users_query.format(current_user.username)
+        enum_playlists_query = queries.number_of_playlists_user_query.format(current_user.username)
+        who_is_following_ids_query = queries.user_follower_query.format(current_user.username)
+        followers_ids_query = queries.user_follows_query.format(current_user.username)
+
+        cursor.execute(popular_artists_query)
+        popular_artists_dict = cursor.fetchall()
+
+        cursor.execute(popular_genre_query)
+        popular_genres_dict = cursor.fetchall()
+
+        cursor.execute(enum_playlists_query)
+        playlists_num_and_data = cursor.fetchall()
+
+        cursor.execute(who_is_following_ids_query)
+        following_id_dict = set([m[0] for m in cursor.fetchall()])
+
+        cursor.execute(followers_ids_query)
+        follower_id_dict = set([m[0] for m in cursor.fetchall()])
+
+        response = {}
+        for tup in playlists_num_and_data:
+            entry = {}
+            username = tup[0]
+            if who_is_following_view and username not in following_id_dict:
+                continue
+            fname = tup[1]
+            lname = tup[2]
+            playlists_num = tup[3]
+            entry['fname'] = fname
+            entry['lname'] = lname
+            entry['playlists_num'] = playlists_num
+            entry['follow'] = username in follower_id_dict
+            response[username] = entry
+
+        for tup in popular_genres_dict:
+            username = tup[0]
+            if who_is_following_view and username not in following_id_dict:
+                continue
+            genre = tup[1]
+            data = response[username]
+            if not data.has_key('genre'):
+                data['genre'] = []
+            data['genre'].append(genre)
+
+        for tup in popular_artists_dict:
+            username = tup[0]
+            if who_is_following_view and username not in following_id_dict:
+                continue
+            artist = tup[1]
+            data = response[username]
+            if not data.has_key('artist'):
+                data['artist'] = []
+            data['artist'].append(artist)
+
+        return HttpResponse(json.dumps(response), content_type="application/json", status=200)

@@ -18,9 +18,16 @@ body {
 	background-color: #790515!important
 }
 
+.follow {
+    background-color: #0c721d;
+}
+
+.foreign {
+  background-color: #c44b11;
+}
+
 .button {
   border-radius: 4px;
-  background-color: #c44b11;
   border: none;
   color: #FFFFFF;
   text-align: center;

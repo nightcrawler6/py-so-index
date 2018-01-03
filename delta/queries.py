@@ -93,6 +93,7 @@ get_most_popular_genre_all_users_query = "select f.username, f.name, f.frequency
                                                     join song on song.SongId=playlist_song.SongId \
                                                     join category on category.categoryId=song.CategoryId \
                                                     group by username, name) as ghost \
+                                                where username != '{}' \
                                                 group by username \
                                             ) as ghost2 inner join (select auth_user.username, category.name, count(*) frequency \
                                                     from auth_user join playlist on auth_user.username=playlist.Username \
@@ -112,6 +113,7 @@ get_most_popular_artist_all_users_query = "select f.username, f.name, f.frequenc
                                                     join song on song.SongId=playlist_song.SongId\
                                                     join artist on artist.ArtistId=song.ArtistId\
                                                     group by username, name) as ghost\
+                                                where username != '{}'\
                                                 group by username\
                                             ) as ghost2 inner join (select auth_user.username, artist.Name, count(*) frequency \
                                                     from auth_user join playlist on auth_user.username=playlist.Username \
@@ -120,7 +122,13 @@ get_most_popular_artist_all_users_query = "select f.username, f.name, f.frequenc
                                                     join artist on artist.ArtistId=song.ArtistId\
                                                     group by username, name) as f on f.username = ghost2.username and f.frequency = ghost2.maximal_value "
 
-number_of_playlists_user_query = "select count(*) \
+number_of_playlists_user_query = "select auth_user.username, auth_user.first_name, auth_user.last_name, count(*) \
                                     from playlist, auth_user where \
-                                    playlist.Username = auth_user.username AND \
-                                    auth_user.username = '{}';"
+                                    playlist.Username = auth_user.username and \
+                                    auth_user.username != '{}' \
+                                    group by auth_user.username"
+
+user_follows_query = "select followers.FollowingID from followers where FollowerID = '{}'"
+
+
+user_follower_query = "select followers.FollowerID from followers where FollowingID = '{}'"

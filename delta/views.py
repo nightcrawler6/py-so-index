@@ -150,6 +150,12 @@ def get_personal_playlists(request):
         cursor.execute(query)
         row = cursor.fetchall();
 
+        query_count_songs = queries.songs_count_in_playlist_user_query.format(request.user)
+        cursor.execute(query_count_songs)
+        song_count = cursor.fetchall();
+
+        song_count_dict = {m[0]:m[1] for m in song_count}
+
         response = []
 
         for tup in row:
@@ -157,6 +163,10 @@ def get_personal_playlists(request):
             entry['id'] = tup[0]
             entry['user'] = tup[1]
             entry['title'] = tup[2]
+            if entry['title'] in song_count_dict:
+                entry['total'] = song_count_dict[entry['title']]
+            else:
+                entry['total'] = 0
 
             date = tup[3]
             entry['created_on'] = "{}-{}-{}".format(date.year, date.month, date.day)

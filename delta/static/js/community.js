@@ -39,6 +39,7 @@ function buildAllUsers(allUsersInfo){
         else{
             var button = $('<button class="button foreign"><span>Follow!</span></button>');
         }
+        $(button).data('username', username);
 
         $(wrapperDiv).append(h3);
         $(wrapperDiv).append(innerp);

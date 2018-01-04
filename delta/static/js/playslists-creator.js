@@ -14,19 +14,6 @@ $(document).ready(function () {
         }
     });
 
-    $.ajax({
-        type: "GET",
-        url: "/get_popular_genre_user",
-        headers: {"X-CSRFToken": getCookie("csrftoken")},
-        contentType: 'application/json; charset=utf-8',
-        success: function (response) {
-            console.log(response);
-        },
-        error: function () {
-            alert("something went wrong...")
-        }
-    });
-
     $('.cf').keypress(function (e) {
         var key = e.which;
         if (key == 13)  // the enter key code
@@ -80,7 +67,7 @@ function buildPlaylistView(raw_data) {
 
         var cardbody = $("<div class='card-body'></div>");
         var cardtitle = $("<h4 class='class-title'>" + playlistObject.title + "</h4>");
-        var cardtracks = $("<h5>10 Tracks</h5>");
+        var cardtracks = $("<h5>" + playlistObject.total + " Tracks</h5>");
         var cardtext = $("<p class='card-text'>Total Duration: 0</p>");
         $(cardbody).append(cardtitle);
         $(cardbody).append(cardtracks);

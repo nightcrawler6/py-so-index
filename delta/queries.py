@@ -132,3 +132,11 @@ user_follows_query = "select followers.FollowingID from followers where Follower
 
 
 user_follower_query = "select followers.FollowerID from followers where FollowingID = '{}'"
+
+songs_count_in_playlist_user_query = "select playlist.Title, count(*) \
+                                        from playlist, auth_user, playlist_song, song \
+                                        where auth_user.username='{}' and \
+                                        playlist.Username=auth_user.username and \
+                                        playlist.PlaylistId=playlist_song.PlaylistId and \
+                                        song.SongId=playlist_song.SongId \
+                                        group by auth_user.username, playlist.Title"

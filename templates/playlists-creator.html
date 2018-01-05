@@ -16,13 +16,16 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="#">Playlist Studio</a>
+        <a class="navbar-brand" href="/playlists_studio">Playlist Studio</a>
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <button type="button" class="btn btn-info" style="cursor:pointer" data-toggle="modal" data-target="#myModal">
             Create Playlist
+        </button>
+        <button id="silence" type="button" class="btn btn-info" style="cursor:pointer; margin-left: 6px;">
+            Mute
         </button>
         <div class="navbar-collapse collapse" id="navbarResponsive" style="">
             <ul class="navbar-nav ml-auto">
@@ -59,78 +62,6 @@
                 <div id="amazing-table" class="col-lg-9" style="display:none">
                 </div>
 
-                {% comment %}<div id="01" class="col-lg-3 col-md-6 mb-3 play">
-                    <div class="card">
-                        <a href="#"><img class="card-img-top"
-                                         src="https://upload.wikimedia.org/wikipedia/en/thumb/d/dc/Damn._Kendrick_Lamar.jpg/220px-Damn._Kendrick_Lamar.jpg"
-                                         alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                Kendrick Beast Mode!
-                            </h4>
-                            <h5>12 Tracks</h5>
-                            <p class="card-text">Total Duration: 1.9 Hours</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Public | (30 Likes)</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="02" class="col-lg-3 col-md-6 mb-3 play">
-                    <div class="card">
-                        <a href="#"><img class="card-img-top"
-                                         src="https://upload.wikimedia.org/wikipedia/en/thumb/3/35/The_Eminem_Show.jpg/220px-The_Eminem_Show.jpg"
-                                         alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                Eminem Rare
-                            </h4>
-                            <h5>2 Tracks</h5>
-                            <p class="card-text">7.8 Minutes</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Private | (0 Likes)</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="03" class="col-lg-3 col-md-6 mb-3 play">
-                    <div class="card">
-                        <a href="#"><img class="card-img-top"
-                                         src="https://upload.wikimedia.org/wikipedia/en/b/b4/Encore_%28Eminem_album%29_coverart.jpg"
-                                         alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                Eminem Jams
-                            </h4>
-                            <h5>18 Tracks</h5>
-                            <p class="card-text">Total Duration: 1.8 Hours</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Public | (30 Likes)</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="04" class="col-lg-3 col-md-6 mb-3 play">
-                    <div class="card">
-                        <a href="#"><img class="card-img-top"
-                                         src="https://i.pinimg.com/736x/e4/7b/01/e47b01f57dcae2838199b781b2899c29--eminem-albums-music-albums.jpg"
-                                         alt=""></a>
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                Some Playlist
-                            </h4>
-                            <h5>20 Tracks</h5>
-                            <p class="card-text">Total Duration: 1.7 Hours</p>
-                        </div>
-                        <div class="card-footer">
-                            <small class="text-muted">Private | (0 Likes)</small>
-                        </div>
-                    </div>
-                </div>{% endcomment %}
-
             </div>
             <!-- /.row -->
 
@@ -145,7 +76,7 @@
 
 <!-- dynamic songs search modal -->
 <div class="modal fade" id="searchModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 70%!important">
         <div class="modal-content">
 
             <!-- Modal Header -->
@@ -167,7 +98,7 @@
         <div class="modal-content">
 
             <!-- Modal Header -->
-            <div class="modal-header">
+            <div class="modal-header modal-header-primary">
                 <h4 class="modal-title">Create a new playlist</h4>
                 <button style="cursor:pointer" type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
@@ -198,6 +129,16 @@
                 </form>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="player">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal body -->
+            <div id="player_body" class="modal-body">
+            </div>
         </div>
     </div>
 </div>

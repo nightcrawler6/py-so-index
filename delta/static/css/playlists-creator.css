@@ -97,3 +97,26 @@ body {
     color:#054a92b8;
     background:#5080ab14;
 }
+
+.modal-header-primary {
+	color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #0f4d89;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+}
+
+.del {
+    background-color: #5080ab82!important;
+    border-color: #5080ab47!important;
+}
+
+.del:hover{
+    background-color: #c82333!important;
+    border-color: #bd2130!important;
+}

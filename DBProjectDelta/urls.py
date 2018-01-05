@@ -39,5 +39,8 @@ urlpatterns = [
     url(r'^remove_song_from_playlist', delete_song_from_playlist, name="delete_song"),
     url(r'^get_popular_genre_user', get_most_listened_genre_by_user, name="most_popular_genre"),
     url(r'^get_popular_artist_user', get_most_listened_artist_by_user, name="most_popular_artist"),
-    url(r'^populate_user_data', populate_users_preview_data, name="populate_user_data")
+    url(r'^populate_user_data', populate_users_preview_data, name="populate_user_data"),
+    url(r'^follow_user', follow_user, name="follow_user"),
+    url(r'^unfollow_user', unfollow_user ,name="unfollow_user"),
+    url(r'^play_song', play_song, name="play_song"),
 ]

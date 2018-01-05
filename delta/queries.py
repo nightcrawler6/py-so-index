@@ -140,3 +140,7 @@ songs_count_in_playlist_user_query = "select playlist.Title, count(*) \
                                         playlist.PlaylistId=playlist_song.PlaylistId and \
                                         song.SongId=playlist_song.SongId \
                                         group by auth_user.username, playlist.Title"
+
+follow_user_query = "insert into followers (FollowerID, FollowingID) values ('{}', '{}');"
+
+unfollow_user_query = "delete from followers where FollowerID='{}' and FollowingID='{}'";

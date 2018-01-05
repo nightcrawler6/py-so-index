@@ -8,6 +8,7 @@ from django.views.decorators.cache import never_cache
 from django.db import connection
 import datetime
 import queries
+import requests
 
 import json
 from cache import Cache
@@ -145,12 +146,18 @@ def get_personal_playlists(request):
     if not isAuth:
         return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
 
+    playlist_owner = request.user
+    if request.method == "POST":
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        playlist_owner = body['username']
+
     with connection.cursor() as cursor:
-        query = queries.get_personal_playlists_query.format(request.user)
+        query = queries.get_personal_playlists_query.format(playlist_owner)
         cursor.execute(query)
         row = cursor.fetchall();
 
-        query_count_songs = queries.songs_count_in_playlist_user_query.format(request.user)
+        query_count_songs = queries.songs_count_in_playlist_user_query.format(playlist_owner)
         cursor.execute(query_count_songs)
         song_count = cursor.fetchall();
 
@@ -404,3 +411,63 @@ def populate_users_preview_data(request):
             data['artist'].append(artist)
 
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
+
+
+def follow_user(request):
+    isAuth = request.user.is_authenticated()
+    if not isAuth:
+        return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
+
+    current_user = request.user
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    to_follow_user = body['toFollow']
+
+    with connection.cursor() as cursor:
+        follow_query = queries.follow_user_query.format(current_user, to_follow_user)
+        cursor.execute(follow_query)
+
+        return HttpResponse(json.dumps({'status': 'success'}), content_type="application/json", status=200)
+
+
+def unfollow_user(request):
+    isAuth = request.user.is_authenticated()
+    if not isAuth:
+        return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
+
+    current_user = request.user
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    to_unfollow_user = body['toUnfollow']
+
+    with connection.cursor() as cursor:
+        follow_query = queries.unfollow_user_query.format(current_user, to_unfollow_user)
+        cursor.execute(follow_query)
+
+        return HttpResponse(json.dumps({'status': 'success'}), content_type="application/json", status=200)
+
+
+def play_song(request):
+    isAuth = request.user.is_authenticated()
+    if not isAuth:
+        return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
+
+    current_user = request.user
+    body_unicode = request.body.decode('utf-8')
+    body = json.loads(body_unicode)
+    title = body['title'].replace(' ', '+')
+    artist = body['artist'].replace(' ', '+')
+    google_query_url = "http://www.google.com/search?q=site:youtube.com+"+title+"+"+artist+"&btnI"
+    get = requests.get(google_query_url)
+    redirect_url = get.url
+
+    if redirect_url is not None:
+        redirect_url = redirect_url.replace('watch?v=','embed/')
+
+    redirect_url += '?autoplay=1'
+
+    return HttpResponse(json.dumps({'embed': redirect_url}), content_type="application/json", status=200)
+
+
+
+

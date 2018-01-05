@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    $('#silence').on('click',function(){
+        $('#player_body').empty();
+    });
     $.ajax({
         type: "GET",
         url: "/get_my_playlists",
@@ -152,9 +155,9 @@ function toggleAll(obj) {
 
 function buildSongsTable(raw_data, container, isDelete) {
     $(container).empty();
-    var buttonType = 'btn btn-success';
+    var buttonType = 'btn btn-success add';
     if (isDelete) {
-        buttonType = 'btn btn-danger';
+        buttonType = 'btn btn-danger del';
     }
     var table = $('<table class="table"></table>');
     var thead = $('<thead></thead>');
@@ -164,11 +167,13 @@ function buildSongsTable(raw_data, container, isDelete) {
     var col3 = $('<th scope="col">Duration</th>');
     var col4 = $('<th scope="col">Artist</th>');
     var col5 = $('<th scope="col">Album</th>');
+    var col6 = $('<th scope="col">Genre</th>');
     $(trhead).append(col1);
     $(trhead).append(col2);
     $(trhead).append(col3);
     $(trhead).append(col4);
     $(trhead).append(col5);
+    $(trhead).append(col6);
     $(thead).append(trhead);
     $(table).append(thead);
     var tbody = $('<tbody></tbody>');
@@ -176,7 +181,7 @@ function buildSongsTable(raw_data, container, isDelete) {
         var songobj = raw_data[i];
         var tr = $('<tr></tr>');
         var col1 = $('<th></th>');
-        var delbtn = $('<button type="button" class="' + buttonType + '" style="margin-top:3px; cursor:pointer">X</button>');
+        var delbtn = $('<button type="button" class="' + buttonType + '" style="cursor:pointer">X</button>');
         $(delbtn).data('songid', songobj.id);
         if (isDelete) {
             $(delbtn).on("click", function () {
@@ -192,15 +197,20 @@ function buildSongsTable(raw_data, container, isDelete) {
         }
 
         $(col1).append(delbtn);
-        var col2 = $('<td>' + songobj.title + '</td>');
+        var col2 = $('<td><a href="#">' + songobj.title + '</a></td>');
+        $(col2).data('title', songobj.title);
+        $(col2).data('artist', songobj.artist);
+        registerPlayMethod(col2);
         var col3 = $('<td>' + songobj.duration + '</td>');
         var col4 = $('<td>' + songobj.artist + '</td>');
         var col5 = $('<td>' + songobj.album + '</td>');
+        var col6 = $('<td>' + songobj.category + '</td>');
         $(tr).append(col1);
         $(tr).append(col2);
         $(tr).append(col3);
         $(tr).append(col4);
         $(tr).append(col5);
+        $(tr).append(col6);
         $(tbody).append(tr);
     }
     $(table).append(tbody);
@@ -249,6 +259,38 @@ function editPlaylist(isDelete, playlistId, songId) {
             alert("something went wrong...")
         }
     });
+}
+
+function registerPlayMethod(col) {
+    $(col).on('click', function () {
+        if($('#loader').length){
+            return;
+        }
+        $(col).append("<img id='loader' src='static/media/ajax-loader.gif'></img>");
+        title = $(col).data('title');
+        artist = $(col).data('artist');
+        data = {
+            'title': title,
+            'artist': artist
+        }
+        $.ajax({
+            type: "POST",
+            url: "/play_song",
+            data: JSON.stringify(data),
+            headers: {"X-CSRFToken": getCookie("csrftoken")},
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                redirect_url = response.embed;
+                $('#player_body').empty();
+                $('#player_body').append('<iframe src= "' + redirect_url + '"></iframe>');
+                $('#loader').remove();
+                //$('#player').modal('show');
+            },
+            error: function () {
+                alert("something went wrong...")
+            }
+        });
+    })
 }
 
 /***

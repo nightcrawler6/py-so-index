@@ -63,3 +63,30 @@ body {
   opacity: 1;
   right: 0;
 }
+
+.bg-dark{
+   text-transform: uppercase;
+}
+
+.modal-dialog{
+  max-width: 100%!important;
+  margin-left:10px;
+  margin-right:10px;
+}
+
+.table{
+  background-color: #ff0a0a38;
+}
+
+.modal-header-primary {
+	color:#fff;
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #790515!important;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+}

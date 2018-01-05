@@ -33,7 +33,7 @@ function buildAllUsers(allUsersInfo) {
 
         var tag = buildTag(following, username);
 
-        var wrapperDiv = $('<div class="col-lg-3 col-sm-3 text-center mb-3"></div>');
+        var wrapperDiv = $('<div class="col-lg-3 col-xs-3 text-center mb-3"></div>');
         var h3 = $('<h3>' + fname + ' ' + lname + '</h3>');
         var pUser = $('<p></p>');
         var noBiggy = $('<small>' + username + '</small>');

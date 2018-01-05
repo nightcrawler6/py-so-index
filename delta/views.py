@@ -27,8 +27,10 @@ def musico(request):
 @never_cache
 def generator(request):
     isAuth = request.user.is_authenticated()
-    context = {"authenticated": isAuth, "user": request.user}
-    return render(request, "generator.html", context)
+    if isAuth:
+        context = {"authenticated": isAuth, "user": request.user}
+        return render(request, "generator.html", context)
+    return redirect("/musico_register")
 
 @ensure_csrf_cookie
 @never_cache

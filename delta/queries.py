@@ -9,6 +9,10 @@ add_song_to_playlist_query = "INSERT INTO playlist_song (PlaylistId, SongId) \
                                 VALUES \
                                 ({},{});"
 
+add_song_to_playlist_bulk_query = "INSERT INTO playlist_song (PlaylistId, SongId) \
+                                VALUES \
+                                {};"
+
 # get songs by search query
 get_songs_by_search_query = "SELECT song.SongId, song.Title, song.Duration, song.PublicDate, song.Views, artist.Name, album.Title, category.name \
                                 FROM song, artist, album, category \
@@ -37,7 +41,9 @@ get_personal_playlists_query = "SELECT DISTINCT playlist.PlaylistId, playlist.Us
 add_playlist_to_user_query = "INSERT INTO playlist \
                                 (Username, Title, CreationDate, cover_uri) \
                                 VALUES \
-                                ('{}', '{}', '{}', '{}')"
+                                ('{}', '{}', '{}', '{}'); \
+                                select last_insert_id();"
+
 
 most_listened_genre_by_user_query = "select ghost.name, frequency from ( \
                                         select count(*) as frequency, category.name, category.categoryId as inner_id \
@@ -133,7 +139,7 @@ user_follows_query = "select followers.FollowingID from followers where Follower
 
 user_follower_query = "select followers.FollowerID from followers where FollowingID = '{}'"
 
-songs_count_in_playlist_user_query = "select playlist.Title, count(*) \
+songs_count_in_playlist_user_query = "select playlist.Title, count(*) as freq \
                                         from playlist, auth_user, playlist_song, song \
                                         where auth_user.username='{}' and \
                                         playlist.Username=auth_user.username and \
@@ -143,4 +149,16 @@ songs_count_in_playlist_user_query = "select playlist.Title, count(*) \
 
 follow_user_query = "insert into followers (FollowerID, FollowingID) values ('{}', '{}');"
 
-unfollow_user_query = "delete from followers where FollowerID='{}' and FollowingID='{}'";
+unfollow_user_query = "delete from followers where FollowerID='{}' and FollowingID='{}'"
+
+recommended_songs_query = "select song.SongId, song.Title, song.Duration, artist.Name, album.Title, category.name \
+                              from song, artist, category, album \
+                              where \
+                              artist.ArtistId=song.ArtistId and \
+                              (artist.Name IN {} or \
+                              category.name IN {}) and  \
+                              category.categoryId=song.CategoryId and \
+                              song.AlbumId=album.AlbumId\
+                              order by rand() LIMIT {};"
+
+average_song_per_playlist_user_query = "select avg(freq) from (" + songs_count_in_playlist_user_query + ") as ghost_alias"

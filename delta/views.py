@@ -415,6 +415,120 @@ def populate_users_preview_data(request):
 
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
 
+def magic(request):
+    isAuth = request.user.is_authenticated()
+    if not isAuth:
+        return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
+
+    current_user = request.user
+
+    if request.method == "POST":
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        id_set = body['id-set']
+
+        fulldate = datetime.datetime.now()
+        date = '{}-{}-{}'.format(fulldate.year, fulldate.month, fulldate.day)
+
+        create_playlist_query = queries.add_playlist_to_user_query.format(current_user, "Magic Playlist", date, "static/media/magic.jpg")
+        with connection.cursor() as cursor:
+            cursor.execute(create_playlist_query)
+            playlistId = cursor.lastrowid
+
+            statement = ""
+            for songId in id_set:
+                value = "({},{})".format(playlistId, songId)
+                statement += value + ","
+            statement = statement[:-1]
+
+            insert_bulk = queries.add_song_to_playlist_bulk_query.format(statement)
+            cursor.execute(insert_bulk)
+
+        return HttpResponse(json.dumps({}), content_type="application/json", status=200)
+
+
+    with connection.cursor() as cursor:
+        popular_artists_query = queries.get_most_popular_artist_all_users_query.format(current_user.username)
+        popular_genre_query = queries.get_most_popular_genre_all_users_query.format(current_user.username)
+        who_is_following_ids_query = queries.user_follower_query.format(current_user.username)
+        followers_ids_query = queries.user_follows_query.format(current_user.username)
+        average_songs_query = queries.average_song_per_playlist_user_query.format(current_user.username)
+        personal_fav_artist = queries.most_listened_artist_by_user_query.format(current_user.username)
+        personal_fav_genre = queries.most_listened_genre_by_user_query.format(current_user.username)
+
+        cursor.execute(popular_artists_query)
+        popular_artists_dict = cursor.fetchall()
+
+        cursor.execute(popular_genre_query)
+        popular_genres_dict = cursor.fetchall()
+
+        cursor.execute(who_is_following_ids_query)
+        following_id_dict = set([m[0] for m in cursor.fetchall()])
+
+        cursor.execute(followers_ids_query)
+        follower_id_dict = set([m[0] for m in cursor.fetchall()])
+
+        cursor.execute(average_songs_query)
+        average_playlist_length = int(float(cursor.fetchone()[0]))+1
+
+        cursor.execute(personal_fav_artist)
+        personal_artist = set([m[0] for m in cursor.fetchall()])
+
+        cursor.execute(personal_fav_genre)
+        personal_genre = set([m[0] for m in cursor.fetchall()])
+
+        response = {}
+
+        common_genres = set()
+        common_artist = set()
+
+        for tup in popular_genres_dict:
+            username = tup[0]
+            if username not in following_id_dict or username not in follower_id_dict:
+                continue
+            genre = tup[1]
+            common_genres.add(genre)
+
+        for tup in popular_artists_dict:
+            username = tup[0]
+            if username not in following_id_dict or username not in follower_id_dict:
+                continue
+            artist = tup[1]
+            common_artist.add(artist)
+
+        # strategy 1: aggregate all results together and bring it!
+        personal_artist.union(common_artist)
+        personal_genre.union(common_genres)
+        magic_query = queries.recommended_songs_query.format(buildStringy(personal_artist), buildStringy(personal_genre), 10)
+        cursor.execute(magic_query)
+        magic_songs = cursor.fetchall()
+
+        wrapper = {}
+        response = []
+        song_ids = []
+        for tup in magic_songs:
+            entry = {}
+            entry['songId'] = tup[0]
+            song_ids.append(tup[0])
+            entry['title'] = tup[1]
+            entry['duration'] = tup[2]
+            entry['artist'] = tup[3]
+            entry['album'] = tup[4]
+            entry['category'] = tup[5]
+
+            response.append(entry)
+        wrapper['data'] = response
+        wrapper['save_data'] = song_ids
+
+        return HttpResponse(json.dumps(wrapper), content_type="application/json", status=200)
+
+def buildStringy(some_set):
+    out = "("
+    for element in some_set:
+        out += "'" + element + "', "
+    out = out[:-2] + ")"
+    return out
+
 
 def follow_user(request):
     isAuth = request.user.is_authenticated()

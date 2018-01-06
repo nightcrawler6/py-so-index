@@ -43,4 +43,5 @@ urlpatterns = [
     url(r'^follow_user', follow_user, name="follow_user"),
     url(r'^unfollow_user', unfollow_user ,name="unfollow_user"),
     url(r'^play_song', play_song, name="play_song"),
+    url(r'^magic', magic, name="magin"),
 ]

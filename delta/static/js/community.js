@@ -292,7 +292,7 @@ function toggleAll(obj) {
     }
 }
 
-function buildSongsTable(raw_data, container, isDelete) {
+function buildSongsTable(raw_data, container) {
     $(container).empty();
     var table = $('<table class="table"></table>');
     var thead = $('<thead></thead>');

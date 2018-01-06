@@ -81,6 +81,7 @@ def login_user(request):
             return redirect("/musico")
         else:
             return redirect("/musico_register")
+    return redirect("/musico_register")
 
 
 @ensure_csrf_cookie

@@ -54,7 +54,8 @@
             <h1 class="masthead-heading mb-0">Music&amp;Co</h1>
             <h2 class="masthead-subheading mb-0">Playlists In A Click.</h2>
             <div class="center">
-                <div style="margin:auto; margin-top:1rem;" class="select-button"><img style="width:60%; margin-bottom:15%" src="{% static '/media/melody.png' %}"></div>
+                <div style="margin:auto; margin-top:1rem;" class="select-button"><img
+                        style="width:60%; margin-bottom:15%" src="{% static '/media/melody.png' %}"></div>
             </div>
         </div>
     </div>
@@ -65,18 +66,22 @@
 </header>
 
 <div class="modal fade" id="generateModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog" id="generatediag">
         <div class="modal-content">
 
             <!-- Modal Header -->
-            <div class="modal-header">
+            <div class="modal-header header-primary">
                 <h4 class="modal-title">Search Results </h4>
                 <button style="cursor:pointer" type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
             <!-- Modal body -->
             <div id="search-table-modal" class="modal-body">
-                <h4>FINISHED ALL THE FUCKING VIEWS!</h4>
+                <h4>$$ Playlist sits here! $$</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Discard</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal">Keep It!</button>
             </div>
         </div>
     </div>

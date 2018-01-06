@@ -39,3 +39,16 @@ header.masthead {
 header.masthead .bg-circle {
     background: linear-gradient(0deg, #96e5ee 0%, #b054ff 100%) !important;
 }
+
+#generatediag {
+    max-width: 70%;
+}
+
+button {
+    cursor: pointer;
+}
+
+.header-primary {
+    background-color: #3d6569;
+    color: white;
+}

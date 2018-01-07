@@ -30,6 +30,9 @@
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top ">
     <div class="container">
         <a class="navbar-brand" href="musico">Music&amp;Co</a>
+        <button id="silence" type="button" class="btn btn-danger" style="cursor:pointer; margin-left: 6px;">
+            Mute
+        </button>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -38,7 +41,8 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     {% if authenticated %}
-                        <a class="nav-link" href="/signout">Logged in as: {{ user }}</a>
+                        <a class="nav-link" href='#' data-toggle="modal" data-target="#signout-modal">Logged in
+                            as: {{ user }}</a>
                     {% else %}
                         <a class="nav-link" href="/musico_register">Connect</a>
                     {% endif %}
@@ -81,6 +85,21 @@
             <div class="modal-footer">
                 <button id="discard-gen" type="button" class="btn btn-default" data-dismiss="modal">Discard</button>
                 <button id="save-gen" type="button" class="btn btn-success">Keep It!</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="signout-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-header-primary">
+                <h4 class="modal-title">Are you sure you want to log out?</h4>
+                <button style="cursor:pointer" type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-footer">
+                <button id="no-sign-out" type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <a id="yes-sign-out" href="/signout" class="btn btn-success">Yes</a>
             </div>
         </div>
     </div>

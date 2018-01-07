@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    $('#silence').on('click', function () {
+        $('#player_body').empty();
+    });
     $('.select-button').on('mouseup', function () {
         $('#generateModal').modal('show');
         $.ajax({

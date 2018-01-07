@@ -49,98 +49,109 @@
             <h1 class="masthead-heading mb-0">Music&amp;Co</h1>
             <h2 class="masthead-subheading mb-0">We Would Love To Have You On Board!</h2>
             <br>
-            <div class="container" style="
-">
+            <div class="container" style="">
                 <div class="row centered-form" style="">
                     <div class="" style="
     margin: auto;
 ">
                         <div class="container">
+                            <div id="fill-all-warn" class="alert alert-danger" style="display: none;">
+                                <strong>Illegal Argument!</strong> Please make sure to fill in all the data.
+                            </div>
+                            <div id="match-pass-warn" class="alert alert-danger" style="display: none;">
+                                <strong>Illegal Argument!</strong> Passwords do not match...
+                            </div>
                             <div class="row">
                                 <div class="col">
                                     <div class="overlay">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Welcome Back To Music&Co
-                                            </h3>
-                                        </div>
-                                        <div class="panel-body">
-                                            <form role="form" method="post" action="login"> {% csrf_token %}
-                                                <div class="form-group">
-                                                    <input type="text" name="username" id="username-login"
-                                                           class="form-control input-sm" placeholder="User Name">
-                                                </div>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Welcome Back To Music&Co
+                                                </h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <form id="loginform" role="form" method="post" action="login"
+                                                      onsubmit="return verifyLoginForm()"> {% csrf_token %}
+                                                    <div class="form-group">
+                                                        <input type="text" name="username" id="username-login"
+                                                               class="form-control input-sm" placeholder="User Name">
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <input type="password" name="password" id="password-login"
-                                                           class="form-control input-sm" placeholder="Password">
-                                                </div>
+                                                    <div class="form-group">
+                                                        <input type="password" name="password" id="password-login"
+                                                               class="form-control input-sm" placeholder="Password">
+                                                    </div>
 
-                                                <input type="submit" value="Login" href="#" style="cursor: pointer"
-                                                       class="btn btn-primary btn-xl rounded-pill mt-5"></input></form>
+                                                    <input type="submit" value="Login" href="#" style="cursor: pointer"
+                                                           class="btn btn-primary btn-xl rounded-pill mt-5"></input>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                    </div>
-                                    </div>
+                                </div>
                                 <div class="col">
                                     <div class="overlay">
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Sign up for Music&amp;Co
-                                                <small>It's free!</small>
-                                            </h3>
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">Sign up for Music&amp;Co
+                                                    <small>It's free!</small>
+                                                </h3>
+                                            </div>
+                                            <div class="panel-body">
+                                                <form id="signupform" role="form" method="post" action="signup"
+                                                      onsubmit="return verifySignupForm()"> {% csrf_token %}
+                                                    <div class="row">
+                                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                                            <div class="form-group">
+                                                                <input type="text" name="first_name" id="first_name"
+                                                                       class="form-control input-sm"
+                                                                       placeholder="First Name">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                                            <div class="form-group">
+                                                                <input type="text" name="last_name" id="last_name"
+                                                                       class="form-control input-sm"
+                                                                       placeholder="Last Name">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <input type="text" name="username" id="username"
+                                                               class="form-control input-sm" placeholder="Display Name">
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <input type="email" name="email" id="email"
+                                                               class="form-control input-sm"
+                                                               placeholder="Email Address">
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                                            <div class="form-group">
+                                                                <input type="password" name="password" id="password"
+                                                                       class="form-control input-sm"
+                                                                       placeholder="Password">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6 col-sm-6 col-md-6">
+                                                            <div class="form-group">
+                                                                <input type="password" name="password_confirmation"
+                                                                       id="password_confirmation"
+                                                                       class="form-control input-sm"
+                                                                       placeholder="Confirm Password">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <input type="submit" value="Register Me!"
+                                                           style="cursor: pointer"
+                                                           class="btn btn-primary btn-xl rounded-pill mt-5"></input>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div class="panel-body">
-                                            <form role="form" method="post" action="signup"> {% csrf_token %}
-                                                <div class="row">
-                                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                                        <div class="form-group">
-                                                            <input type="text" name="first_name" id="first_name"
-                                                                   class="form-control input-sm"
-                                                                   placeholder="First Name">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                                        <div class="form-group">
-                                                            <input type="text" name="last_name" id="last_name"
-                                                                   class="form-control input-sm"
-                                                                   placeholder="Last Name">
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <input type="text" name="username" id="username"
-                                                           class="form-control input-sm" placeholder="Display Name">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <input type="email" name="email" id="email"
-                                                           class="form-control input-sm" placeholder="Email Address">
-                                                </div>
-
-                                                <div class="row">
-                                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                                        <div class="form-group">
-                                                            <input type="password" name="password" id="password"
-                                                                   class="form-control input-sm" placeholder="Password">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-6 col-sm-6 col-md-6">
-                                                        <div class="form-group">
-                                                            <input type="password" name="password_confirmation"
-                                                                   id="password_confirmation"
-                                                                   class="form-control input-sm"
-                                                                   placeholder="Confirm Password">
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <input type="submit" value="Register Me!"
-                                                       style="cursor: pointer"
-                                                       class="btn btn-primary btn-xl rounded-pill mt-5"></input></form>
-                                        </div>
-                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -172,6 +183,8 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{% static 'js/jquery.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/signup.js' %}"></script>
+
 
 </body>
 </html>

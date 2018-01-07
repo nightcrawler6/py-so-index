@@ -68,7 +68,7 @@ body {
    text-transform: uppercase;
 }
 
-.modal-dialog{
+#user_playlists_modal .modal-dialog{
   max-width: 100%!important;
   margin-left:10px;
   margin-right:10px;
@@ -76,6 +76,10 @@ body {
 
 .table{
   background-color: #ff0a0a38;
+}
+
+button {
+    cursor: pointer;
 }
 
 .modal-header-primary {

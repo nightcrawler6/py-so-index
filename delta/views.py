@@ -11,10 +11,7 @@ import queries
 import requests
 
 import json
-from cache import Cache
 
-# init cache singletone
-cache = Cache(CACHE_SIZE)
 
 @ensure_csrf_cookie
 @never_cache
@@ -22,6 +19,7 @@ def musico(request):
     isAuth = request.user.is_authenticated()
     context = {"authenticated": isAuth, "user": request.user}
     return render(request, "index.html", context)
+
 
 @ensure_csrf_cookie
 @never_cache
@@ -32,6 +30,7 @@ def generator(request):
         return render(request, "generator.html", context)
     return redirect("/musico_register")
 
+
 @ensure_csrf_cookie
 @never_cache
 def community(request):
@@ -40,6 +39,7 @@ def community(request):
         context = {"authenticated": isAuth, "user": request.user}
         return render(request, "community.html", context)
     return redirect("/musico_register")
+
 
 @ensure_csrf_cookie
 @never_cache
@@ -50,12 +50,14 @@ def who_is_following(request):
         return render(request, "who_is_following.html", context)
     return redirect("/musico_register")
 
+
 def playlists(request):
     isAuth = request.user.is_authenticated()
     if isAuth:
         context = {"authenticated": isAuth, "user": request.user}
         return render(request, "playlists-creator.html", context)
     return redirect("/musico_register")
+
 
 @ensure_csrf_cookie
 @never_cache
@@ -64,6 +66,7 @@ def musico_register(request):
     if isAuth:
         return redirect("/musico")
     return render(request, 'signup.html')
+
 
 @ensure_csrf_cookie
 @never_cache
@@ -116,6 +119,7 @@ def register_user(request):
             return redirect("/musico")
         else:
             return redirect("/musico_register")
+
 
 def logout_user(request):
     if request.session.has_key('username'):
@@ -415,6 +419,7 @@ def populate_users_preview_data(request):
 
         return HttpResponse(json.dumps(response), content_type="application/json", status=200)
 
+
 def magic(request):
     isAuth = request.user.is_authenticated()
     if not isAuth:
@@ -433,8 +438,10 @@ def magic(request):
         create_playlist_query = queries.add_playlist_to_user_query.format(current_user, "Magic Playlist", date, "static/media/magic.jpg")
         with connection.cursor() as cursor:
             cursor.execute(create_playlist_query)
+            cursor.fetchall()
             playlistId = cursor.lastrowid
 
+        with connection.cursor() as cursor:
             statement = ""
             for songId in id_set:
                 value = "({},{})".format(playlistId, songId)
@@ -445,7 +452,6 @@ def magic(request):
             cursor.execute(insert_bulk)
 
         return HttpResponse(json.dumps({}), content_type="application/json", status=200)
-
 
     with connection.cursor() as cursor:
         popular_artists_query = queries.get_most_popular_artist_all_users_query.format(current_user.username)
@@ -484,21 +490,21 @@ def magic(request):
 
         for tup in popular_genres_dict:
             username = tup[0]
-            if username not in following_id_dict or username not in follower_id_dict:
+            if username not in following_id_dict and username not in follower_id_dict:
                 continue
             genre = tup[1]
             common_genres.add(genre)
 
         for tup in popular_artists_dict:
             username = tup[0]
-            if username not in following_id_dict or username not in follower_id_dict:
+            if username not in following_id_dict and username not in follower_id_dict:
                 continue
             artist = tup[1]
             common_artist.add(artist)
 
         # strategy 1: aggregate all results together and bring it!
-        personal_artist.union(common_artist)
-        personal_genre.union(common_genres)
+        personal_artist = personal_artist.union(common_artist)
+        personal_genre = personal_genre.union(common_genres)
         magic_query = queries.recommended_songs_query.format(buildStringy(personal_artist), buildStringy(personal_genre), 10)
         cursor.execute(magic_query)
         magic_songs = cursor.fetchall()
@@ -521,13 +527,6 @@ def magic(request):
         wrapper['save_data'] = song_ids
 
         return HttpResponse(json.dumps(wrapper), content_type="application/json", status=200)
-
-def buildStringy(some_set):
-    out = "("
-    for element in some_set:
-        out += "'" + element + "', "
-    out = out[:-2] + ")"
-    return out
 
 
 def follow_user(request):
@@ -586,5 +585,9 @@ def play_song(request):
     return HttpResponse(json.dumps({'embed': redirect_url}), content_type="application/json", status=200)
 
 
-
-
+def buildStringy(some_set):
+    out = "("
+    for element in some_set:
+        out += "'" + element + "', "
+    out = out[:-2] + ")"
+    return out

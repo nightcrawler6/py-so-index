@@ -2,163 +2,163 @@
 
 # delete a song from a playlist
 delete_song_from_playlist_query = "DELETE FROM playlist_song \
-                                     WHERE playlist_song.PlaylistId={} AND playlist_song.SongId={};"
+                                     WHERE playlist_song.playlist_id={} AND playlist_song.song_id={};"
 
 # add a song to a playlist
-add_song_to_playlist_query = "INSERT INTO playlist_song (PlaylistId, SongId) \
+add_song_to_playlist_query = "INSERT INTO playlist_song (playlist_id, song_id) \
                                 VALUES \
                                 ({},{});"
 
-add_song_to_playlist_bulk_query = "INSERT INTO playlist_song (PlaylistId, SongId) \
+add_song_to_playlist_bulk_query = "INSERT INTO playlist_song (playlist_id, song_id) \
                                 VALUES \
                                 {};"
 
 # get songs by search query
-get_songs_by_search_query = "SELECT song.SongId, song.Title, song.Duration, song.PublicDate, song.Views, artist.Name, album.Title, category.name \
+get_songs_by_search_query = "SELECT song.song_id, song.title, song.duration, song.release_date, song.views, artist.artist_name, album.album_title, category.category_name \
                                 FROM song, artist, album, category \
-                                WHERE song.ArtistId=artist.ArtistId AND \
-                                song.AlbumId=album.AlbumId AND \
-                                song.CategoryId=category.categoryId AND \
-                                (song.Title LIKE '%{0}%' OR artist.Name LIKE '%{0}%' OR album.Title LIKE '%{0}%');"
+                                WHERE song.artist_id=artist.artist_id AND \
+                                song.album_id=album.album_id AND \
+                                song.category_id=category.category_id AND \
+                                (song.title LIKE '%{0}%' OR artist.artist_name LIKE '%{0}%' OR album.album_title LIKE '%{0}%');"
 
 # get all songs in a playlist
-get_songs_in_playlist_query = "SELECT song.SongId, song.Title, song.Duration,  artist.Name, album.Title, category.name \
+get_songs_in_playlist_query = "SELECT song.song_id, song.title, song.duration,  artist.artist_name, album.album_title, category.category_name \
                                 FROM playlist, playlist_song, song, artist, album, category \
-                                WHERE playlist.PlaylistId=playlist_song.PlaylistId AND \
-                                playlist_song.SongId=song.SongId AND \
-                                song.ArtistId=artist.ArtistId AND \
-                                song.AlbumId=album.AlbumId AND \
-                                song.CategoryId=category.categoryId AND \
-                                playlist.PlaylistId='{0}';"
+                                WHERE playlist.playlist_id=playlist_song.playlist_id AND \
+                                playlist_song.song_id=song.song_id AND \
+                                song.artist_id=artist.artist_id AND \
+                                song.album_id=album.album_id AND \
+                                song.category_id=category.category_id AND \
+                                playlist.playlist_id='{0}';"
 
 # get all playlists that belong to a user
-get_personal_playlists_query = "SELECT DISTINCT playlist.PlaylistId, playlist.Username, playlist.Title, playlist.CreationDate, playlist.cover_uri \
+get_personal_playlists_query = "SELECT DISTINCT playlist.playlist_id, playlist.username, playlist.playlist_title, playlist.creation_date, playlist.cover_uri \
                                     FROM auth_user, playlist \
-                                    WHERE auth_user.username = playlist.Username AND \
+                                    WHERE auth_user.username = playlist.username AND \
                                     auth_user.username = '{0}';"
 
 # add playlist to a user space
 add_playlist_to_user_query = "INSERT INTO playlist \
-                                (Username, Title, CreationDate, cover_uri) \
+                                (username, playlist_title, creation_date, cover_uri) \
                                 VALUES \
                                 ('{}', '{}', '{}', '{}'); \
                                 select last_insert_id();"
 
 
-most_listened_genre_by_user_query = "select ghost.name, frequency from ( \
-                                        select count(*) as frequency, category.name, category.categoryId as inner_id \
+most_listened_genre_by_user_query = "select ghost.category_name, frequency from ( \
+                                        select count(*) as frequency, category.category_name, category.category_id as inner_id \
                                         from auth_user, playlist, playlist_song, song, category where \
-                                        auth_user.username=playlist.Username AND \
-                                        playlist.PlaylistId=playlist_song.PlaylistId AND \
-                                        song.SongId=playlist_song.SongId AND \
-                                        song.CategoryId=category.categoryId AND \
+                                        auth_user.username=playlist.username AND \
+                                        playlist.playlist_id=playlist_song.playlist_id AND \
+                                        song.song_id=playlist_song.song_id AND \
+                                        song.category_id=category.category_id AND \
                                         auth_user.username='{0}' \
-                                        group by category.categoryId \
+                                        group by category.category_id \
                                         ) as ghost, category \
-                                    where inner_id=category.categoryId \
+                                    where inner_id=category.category_id \
                                     having frequency = (select max(temp) from( \
                                                             select count(*) as temp \
                                                                 from auth_user, playlist, playlist_song, song, category where \
-                                                                auth_user.username=playlist.Username AND \
-                                                                playlist.PlaylistId=playlist_song.PlaylistId AND \
-                                                                song.SongId=playlist_song.SongId AND \
-                                                                song.CategoryId=category.categoryId AND \
+                                                                auth_user.username=playlist.username AND \
+                                                                playlist.playlist_id=playlist_song.playlist_id AND \
+                                                                song.song_id=playlist_song.song_id AND \
+                                                                song.category_id=category.category_id AND \
                                                                 auth_user.username='{0}' \
-                                                                group by category.categoryId \
+                                                                group by category.category_id \
                                                                 ) as ghost2 )"
 
-most_listened_artist_by_user_query = "select ghost.name, frequency from ( \
-                                        select count(*) as frequency, artist.name, artist.ArtistId as inner_id \
+most_listened_artist_by_user_query = "select ghost.artist_name, frequency from ( \
+                                        select count(*) as frequency, artist.artist_name, artist.artist_id as inner_id \
                                         from auth_user, playlist, playlist_song, song, artist where \
-                                        auth_user.username=playlist.Username AND \
-                                        playlist.PlaylistId=playlist_song.PlaylistId AND \
-                                        song.SongId=playlist_song.SongId AND \
-                                        song.ArtistId=artist.ArtistId AND \
+                                        auth_user.username=playlist.username AND \
+                                        playlist.playlist_id=playlist_song.playlist_id AND \
+                                        song.song_id=playlist_song.song_id AND \
+                                        song.artist_id=artist.artist_id AND \
                                         auth_user.username='{0}' \
-                                        group by artist.ArtistId \
+                                        group by artist.artist_id \
                                         ) as ghost, artist \
-                                    where inner_id=artist.ArtistId \
+                                    where inner_id=artist.artist_id \
                                     having frequency = (select max(temp) from( \
                                                             select count(*) as temp \
                                                                 from auth_user, playlist, playlist_song, song, artist where \
-                                                                auth_user.username=playlist.Username AND \
-                                                                playlist.PlaylistId=playlist_song.PlaylistId AND \
-                                                                song.SongId=playlist_song.SongId AND \
-                                                                song.ArtistId=artist.ArtistId AND \
+                                                                auth_user.username=playlist.username AND \
+                                                                playlist.playlist_id=playlist_song.playlist_id AND \
+                                                                song.song_id=playlist_song.song_id AND \
+                                                                song.artist_id=artist.artist_id AND \
                                                                 auth_user.username='{0}' \
-                                                                group by artist.ArtistId \
+                                                                group by artist.artist_id \
                                                                 ) as ghost2 )"
 
-get_most_popular_genre_all_users_query = "select f.username, f.name, f.frequency \
+get_most_popular_genre_all_users_query = "select f.username, f.category_name, f.frequency \
                                             from(\
                                                 select username, max(frequency) as maximal_value\
                                                 from( \
-                                                    select auth_user.username, category.name, count(*) frequency\
-                                                    from auth_user join playlist on auth_user.username=playlist.Username \
-                                                    join playlist_song on playlist_song.PlaylistId=playlist.PlaylistId \
-                                                    join song on song.SongId=playlist_song.SongId \
-                                                    join category on category.categoryId=song.CategoryId \
-                                                    group by username, name) as ghost \
+                                                    select auth_user.username, category.category_name, count(*) frequency\
+                                                    from auth_user join playlist on auth_user.username=playlist.username \
+                                                    join playlist_song on playlist_song.playlist_id=playlist.playlist_id \
+                                                    join song on song.song_id=playlist_song.song_id \
+                                                    join category on category.category_id=song.category_id \
+                                                    group by username, category_name) as ghost \
                                                 where username != '{}' \
                                                 group by username \
-                                            ) as ghost2 inner join (select auth_user.username, category.name, count(*) frequency \
-                                                    from auth_user join playlist on auth_user.username=playlist.Username \
-                                                    join playlist_song on playlist_song.PlaylistId=playlist.PlaylistId\
-                                                    join song on song.SongId=playlist_song.SongId \
-                                                    join category on category.categoryId=song.CategoryId \
-                                                    group by username, name) as f on f.username = ghost2.username and f.frequency = ghost2.maximal_value "
+                                            ) as ghost2 inner join (select auth_user.username, category.category_name, count(*) frequency \
+                                                    from auth_user join playlist on auth_user.username=playlist.username \
+                                                    join playlist_song on playlist_song.playlist_id=playlist.playlist_id\
+                                                    join song on song.song_id=playlist_song.song_id \
+                                                    join category on category.category_id=song.category_id \
+                                                    group by username, category_name) as f on f.username = ghost2.username and f.frequency = ghost2.maximal_value "
 
 
-get_most_popular_artist_all_users_query = "select f.username, f.name, f.frequency \
+get_most_popular_artist_all_users_query = "select f.username, f.artist_name, f.frequency \
                                             from( \
                                                 select username, max(frequency) as maximal_value \
                                                 from( \
-                                                    select auth_user.username, artist.Name, count(*) frequency \
-                                                    from auth_user join playlist on auth_user.username=playlist.Username \
-                                                    join playlist_song on playlist_song.PlaylistId=playlist.PlaylistId\
-                                                    join song on song.SongId=playlist_song.SongId\
-                                                    join artist on artist.ArtistId=song.ArtistId\
-                                                    group by username, name) as ghost\
+                                                    select auth_user.username, artist.artist_name, count(*) frequency \
+                                                    from auth_user join playlist on auth_user.username=playlist.username \
+                                                    join playlist_song on playlist_song.playlist_id=playlist.playlist_id\
+                                                    join song on song.song_id=playlist_song.song_id\
+                                                    join artist on artist.artist_id=song.artist_id\
+                                                    group by username, artist_name) as ghost\
                                                 where username != '{}'\
                                                 group by username\
-                                            ) as ghost2 inner join (select auth_user.username, artist.Name, count(*) frequency \
-                                                    from auth_user join playlist on auth_user.username=playlist.Username \
-                                                    join playlist_song on playlist_song.PlaylistId=playlist.PlaylistId\
-                                                    join song on song.SongId=playlist_song.SongId\
-                                                    join artist on artist.ArtistId=song.ArtistId\
-                                                    group by username, name) as f on f.username = ghost2.username and f.frequency = ghost2.maximal_value "
+                                            ) as ghost2 inner join (select auth_user.username, artist.artist_name, count(*) frequency \
+                                                    from auth_user join playlist on auth_user.username=playlist.username \
+                                                    join playlist_song on playlist_song.playlist_id=playlist.playlist_id\
+                                                    join song on song.song_id=playlist_song.song_id\
+                                                    join artist on artist.artist_id=song.artist_id\
+                                                    group by username, artist_name) as f on f.username = ghost2.username and f.frequency = ghost2.maximal_value "
 
 number_of_playlists_user_query = "select auth_user.username, auth_user.first_name, auth_user.last_name, count(*) \
                                     from playlist, auth_user where \
-                                    playlist.Username = auth_user.username and \
+                                    playlist.username = auth_user.username and \
                                     auth_user.username != '{}' \
                                     group by auth_user.username"
 
-user_follows_query = "select followers.FollowingID from followers where FollowerID = '{}'"
+user_follows_query = "select follows.following_username from follows where follower_username = '{}'"
 
 
-user_follower_query = "select followers.FollowerID from followers where FollowingID = '{}'"
+user_follower_query = "select follows.follower_username from follows where following_username = '{}'"
 
-songs_count_in_playlist_user_query = "select playlist.Title, count(*) as freq \
+songs_count_in_playlist_user_query = "select playlist.playlist_id, count(*) as freq \
                                         from playlist, auth_user, playlist_song, song \
                                         where auth_user.username='{}' and \
-                                        playlist.Username=auth_user.username and \
-                                        playlist.PlaylistId=playlist_song.PlaylistId and \
-                                        song.SongId=playlist_song.SongId \
-                                        group by auth_user.username, playlist.Title"
+                                        playlist.username=auth_user.username and \
+                                        playlist.playlist_id=playlist_song.playlist_id and \
+                                        song.song_id=playlist_song.song_id \
+                                        group by auth_user.username, playlist.playlist_id"
 
-follow_user_query = "insert into followers (FollowerID, FollowingID) values ('{}', '{}');"
+follow_user_query = "insert into follows (follower_username, following_username) values ('{}', '{}');"
 
-unfollow_user_query = "delete from followers where FollowerID='{}' and FollowingID='{}'"
+unfollow_user_query = "delete from follows where follower_username='{}' and following_username='{}'"
 
-recommended_songs_query = "select song.SongId, song.Title, song.Duration, artist.Name, album.Title, category.name \
+recommended_songs_query = "select song.song_id, song.title, song.duration, artist.artist_name, album.album_title, category.category_name \
                               from song, artist, category, album \
                               where \
-                              artist.ArtistId=song.ArtistId and \
-                              (artist.Name IN {} or \
-                              category.name IN {}) and  \
-                              category.categoryId=song.CategoryId and \
-                              song.AlbumId=album.AlbumId\
+                              artist.artist_id=song.artist_id and \
+                              (artist.artist_name IN {} or \
+                              category.category_name IN {}) and  \
+                              category.category_id=song.category_id and \
+                              song.album_id=album.album_id\
                               order by rand() LIMIT {};"
 
 average_song_per_playlist_user_query = "select avg(freq) from (" + songs_count_in_playlist_user_query + ") as ghost_alias"

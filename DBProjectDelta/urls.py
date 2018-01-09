@@ -18,6 +18,7 @@ from django.contrib import admin
 
 from delta.views import *
 from delta.dbtester import *
+from delta.db_servlets import *
 
 urlpatterns = [
     url(r'^admin', admin.site.urls),

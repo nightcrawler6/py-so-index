@@ -2,12 +2,12 @@
 
 # delete a song from a playlist
 delete_song_from_playlist_query = "DELETE FROM playlist_song \
-                                     WHERE playlist_song.playlist_id={} AND playlist_song.song_id={};"
+                                     WHERE playlist_song.playlist_id={} AND playlist_song.song_id='{}';"
 
 # add a song to a playlist
 add_song_to_playlist_query = "INSERT INTO playlist_song (playlist_id, song_id) \
                                 VALUES \
-                                ({},{});"
+                                ({},'{}');"
 
 add_song_to_playlist_bulk_query = "INSERT INTO playlist_song (playlist_id, song_id) \
                                 VALUES \

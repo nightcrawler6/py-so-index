@@ -78,11 +78,11 @@ WSGI_APPLICATION = 'DBProjectDelta.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'example-db',
-        'USER': 'root',
-        'PASSWORD': 'zubur1',
+        'NAME': 'DbMysql10',
+        'USER': 'DbMysql10',
+        'PASSWORD': 'DbMysql10',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '3305',
     }
 }
 

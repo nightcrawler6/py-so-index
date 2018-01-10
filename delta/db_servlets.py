@@ -126,7 +126,10 @@ def get_songs_by_search(request):
             entry['duration'] = tup[2]
 
             date = tup[3]
-            entry['publication-date'] = "{}-{}-{}".format(date.year, date.month, date.day)
+            if date != None:
+                entry['publication-date'] = "{}-{}-{}".format(date.year, date.month, date.day)
+            else:
+                entry['publication-date'] = "N/A"
 
             entry['views'] = tup[4]
             entry['artist'] = tup[5]
@@ -334,7 +337,7 @@ def magic(request):
         with connection.cursor() as cursor:
             statement = ""
             for songId in id_set:
-                value = "({},{})".format(playlistId, songId)
+                value = "({},'{}')".format(playlistId, songId)
                 statement += value + ","
             statement = statement[:-1]
 
@@ -365,7 +368,10 @@ def magic(request):
         follower_id_dict = set([m[0] for m in cursor.fetchall()])
 
         cursor.execute(average_songs_query)
-        average_playlist_length = int(float(cursor.fetchone()[0]))+1
+        fetch_result = cursor.fetchone()[0]
+        if fetch_result == None:
+            fetch_result = 0
+        average_playlist_length = int(float(fetch_result))+1
 
         cursor.execute(personal_fav_artist)
         personal_artist = set([m[0] for m in cursor.fetchall()])

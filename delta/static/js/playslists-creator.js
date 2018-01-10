@@ -201,7 +201,12 @@ function buildSongsTable(raw_data, container, isDelete) {
         $(col2).data('title', songobj.title);
         $(col2).data('artist', songobj.artist);
         registerPlayMethod(col2);
-        var col3 = $('<td>' + songobj.duration + '</td>');
+        var ms = songobj.duration;
+        min = Math.floor((ms/1000/60) << 0);
+        sec = Math.floor((ms/1000) % 60);
+        if(sec<10) {sec = "0"+sec.toString()};
+
+        var col3 = $('<td>' + min + ":" + sec + '</td>');
         var col4 = $('<td>' + songobj.artist + '</td>');
         var col5 = $('<td>' + songobj.album + '</td>');
         var col6 = $('<td>' + songobj.category + '</td>');

@@ -181,18 +181,22 @@ function buildSongsTable(raw_data, container, isDelete) {
         var songobj = raw_data[i];
         var tr = $('<tr></tr>');
         var col1 = $('<th></th>');
-        var delbtn = $('<button type="button" class="' + buttonType + '" style="cursor:pointer">X</button>');
+        var icon = '<i class="icon-ok"></i>';
+        if(isDelete){
+            icon = '<i class="icon-remove"></i>'
+        }
+        var delbtn = $('<button type="button" class="' + buttonType + '" style="cursor:pointer">' + icon + '</button>');
         $(delbtn).data('songid', songobj.id);
         if (isDelete) {
             $(delbtn).on("click", function () {
                 //alert($(this).data('songid'));
-                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(this).data('songid'));
+                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(this).data('songid'), null);
             });
         }
         else {
             $(delbtn).on("click", function () {
                 //alert($(this).data('songid'));
-                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(this).data('songid'));
+                editPlaylist(isDelete, $('.cf').data('active-playlist'), $(this).data('songid'), this);
             });
         }
 
@@ -222,7 +226,7 @@ function buildSongsTable(raw_data, container, isDelete) {
     $(container).append(table);
 }
 
-function editPlaylist(isDelete, playlistId, songId) {
+function editPlaylist(isDelete, playlistId, songId, srcBtn) {
     var servlet = "";
     var containerId = "";
     if (!isDelete) {
@@ -242,7 +246,7 @@ function editPlaylist(isDelete, playlistId, songId) {
         headers: {"X-CSRFToken": getCookie("csrftoken")},
         contentType: 'application/json; charset=utf-8',
         success: function (response) {
-            $('#searchModal').modal('hide');
+            //$('#searchModal').modal('hide');
             $.ajax({
                 type: "POST",
                 url: "/get_playlist_songs",
@@ -254,6 +258,13 @@ function editPlaylist(isDelete, playlistId, songId) {
                         buildSongsTable(response, $($("#amazing-table")[0]), true);
                         $($("#amazing-table")[0]).fadeIn();
                     });
+                    if(srcBtn != null) {
+                        var tag = $('<span id="added_tag" style="display: none; font-size:10px; cursor: pointer;"class="badge badge-success">added!</span>\n');
+                        $($(srcBtn).parent().parent().find('td')[0]).append(tag);
+                        $('#added_tag').fadeIn().delay(1000).fadeOut(function(){
+                           $('#added_tag').remove();
+                        });
+                    }
                 },
                 error: function () {
                     alert("something went wrong...")

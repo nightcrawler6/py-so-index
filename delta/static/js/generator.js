@@ -3,7 +3,6 @@ $(document).ready(function () {
         $('#player_body').empty();
     });
     $('.select-button').on('mouseup', function () {
-        $('#generateModal').modal('show');
         $.ajax({
             type: "GET",
             url: "/magic",
@@ -12,6 +11,7 @@ $(document).ready(function () {
             success: function (response) {
                 buildSongsTable(response.data, $('#search-table-modal')[0])
                 bindSaveParams(response.save_data);
+                $('#generateModal').modal('show');
             },
             error: function () {
                 alert("something went wrong...")

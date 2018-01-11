@@ -9,6 +9,7 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/playlists-creator.css' %}" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
 </head>
 
@@ -35,7 +36,8 @@
                 </li>
                 <li class="nav-item">
                     {% if authenticated %}
-                        <a class="nav-link" href='#' data-toggle="modal" data-target="#signout-modal">Logged in as: {{ user }}</a>
+                        <a class="nav-link" href='#' data-toggle="modal" data-target="#signout-modal">Logged in
+                            as: {{ user }}</a>
                     {% else %}
                         <a class="nav-link" href="/musico_register">Connect</a>
                     {% endif %}
@@ -151,7 +153,7 @@
                 <h4 class="modal-title">Are you sure you want to log out?</h4>
                 <button style="cursor:pointer" type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-           <div class="modal-footer">
+            <div class="modal-footer">
                 <button id="no-sign-out" type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                 <a id="yes-sign-out" href="/signout" class="btn btn-success">Yes</a>
             </div>

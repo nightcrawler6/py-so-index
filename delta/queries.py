@@ -44,6 +44,9 @@ add_playlist_to_user_query = "INSERT INTO playlist \
                                 ('{}', '{}', '{}', '{}'); \
                                 select last_insert_id();"
 
+# delete a playlist from the user space
+delete_playlist_from_space = "DELETE FROM playlist_song where playlist_id={0}; DELETE FROM playlist where playlist_id={0};"
+
 
 most_listened_genre_by_user_query = "select ghost.category_name, frequency from ( \
                                         select count(*) as frequency, category.category_name, category.category_id as inner_id \
@@ -139,7 +142,7 @@ user_follows_query = "select follows.following_username from follows where follo
 
 user_follower_query = "select follows.follower_username from follows where following_username = '{}'"
 
-songs_count_in_playlist_user_query = "select playlist.playlist_id, count(*) as freq \
+songs_count_in_playlist_user_query = "select playlist.playlist_id, count(*) as freq, sum(song.duration) as total_duration\
                                         from playlist, auth_user, playlist_song, song \
                                         where auth_user.username='{}' and \
                                         playlist.username=auth_user.username and \

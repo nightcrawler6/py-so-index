@@ -62,6 +62,17 @@ function buildAllUsers(allUsersInfo) {
     $('#members-container').fadeIn();
 }
 
+function msToTime(s) {
+    var ms = s % 1000;
+    s = (s - ms) / 1000;
+    var secs = s % 60;
+    s = (s - secs) / 60;
+    var mins = s % 60;
+    var hrs = (s - mins) / 60;
+    if(mins<10){ mins = '0'+mins;}
+    return '<strong>' + hrs + ':' + mins + '</strong> (hr/min)';
+}
+
 function buildTag(following, username) {
     var tag = $("");
     if (following) {
@@ -210,7 +221,8 @@ function buildPlaylistView(raw_data) {
         var cardbody = $("<div class='card-body'></div>");
         var cardtitle = $("<h4 class='class-title'>" + playlistObject.title + "</h4>");
         var cardtracks = $("<h5>" + playlistObject.total + " Tracks</h5>");
-        var cardtext = $("<p class='card-text'>Total Duration: 0</p>");
+        var du = msToTime(parseInt(playlistObject.duration));
+        var cardtext = $("<p class='card-text'>Total Duration: " + du + "</p>");
         $(cardbody).append(cardtitle);
         $(cardbody).append(cardtracks);
         $(cardbody).append(cardtext);
@@ -319,9 +331,12 @@ function buildSongsTable(raw_data, container) {
         registerPlayMethod(col2);
 
         var ms = songobj.duration;
-        min = Math.floor((ms/1000/60) << 0);
-        sec = Math.floor((ms/1000) % 60);
-        if(sec<10) {sec = "0"+sec.toString()};
+        min = Math.floor((ms / 1000 / 60) << 0);
+        sec = Math.floor((ms / 1000) % 60);
+        if (sec < 10) {
+            sec = "0" + sec.toString()
+        }
+        ;
 
         var col3 = $('<td>' + min + ":" + sec + '</td>');
         var col4 = $('<td>' + songobj.artist + '</td>');

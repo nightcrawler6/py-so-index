@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('#silence').on('click',function(){
+    $('#silence').on('click', function () {
         $('#player_body').empty();
     });
     $.ajax({
@@ -71,12 +71,21 @@ function buildPlaylistView(raw_data) {
         var cardbody = $("<div class='card-body'></div>");
         var cardtitle = $("<h4 class='class-title'>" + playlistObject.title + "</h4>");
         var cardtracks = $("<h5>" + playlistObject.total + " Tracks</h5>");
-        var cardtext = $("<p class='card-text'>Total Duration: 0</p>");
+        var du = msToTime(parseInt(playlistObject.duration));
+        var cardtext = $("<p class='card-text'>Total Duration: " + du + "</p>");
         $(cardbody).append(cardtitle);
         $(cardbody).append(cardtracks);
         $(cardbody).append(cardtext);
 
-        var cardfoot = $("<div class='card-footer'><small class='text-muted'>Created on: " + playlistObject.created_on + "</small></div>");
+        var cardfoot = $("<div class='card-footer'></div>");
+
+        var del = $('<i style="float: right; cursor: pointer;" class="icon-remove play-del"></i>');
+        del.data('playlist-id', playlistObject.id);
+        registerDeletePlaylist(del);
+        var creation = $("<small class='text-muted'>Created on: " + playlistObject.created_on + "</small>");
+
+        $(cardfoot).append(creation);
+        $(cardfoot).append(del);
 
         $(card).append(link);
         $(card).append(cardbody);
@@ -86,6 +95,42 @@ function buildPlaylistView(raw_data) {
 
         $(container).append(col);
     }
+}
+
+function msToTime(s) {
+    var ms = s % 1000;
+    s = (s - ms) / 1000;
+    var secs = s % 60;
+    s = (s - secs) / 60;
+    var mins = s % 60;
+    var hrs = (s - mins) / 60;
+    if(mins<10){ mins = '0'+mins;}
+
+    return '<strong>' + hrs + ':' + mins + '</strong> (hr/min)';
+}
+
+function registerDeletePlaylist(btn) {
+    var id = btn.data('playlist-id');
+    var data = {
+        'id': id
+    }
+    $(btn).on('click', function () {
+        $.ajax({
+            type: "POST",
+            url: "/delete_playlist",
+            data: JSON.stringify(data),
+            headers: {"X-CSRFToken": getCookie("csrftoken")},
+            contentType: 'application/json; charset=utf-8',
+            success: function (response) {
+                $($(btn).parent().parent().parent()).fadeOut(function () {
+                    $(this).remove();
+                });
+            },
+            error: function () {
+                alert("something went wrong...")
+            }
+        });
+    });
 }
 
 /***
@@ -182,7 +227,7 @@ function buildSongsTable(raw_data, container, isDelete) {
         var tr = $('<tr></tr>');
         var col1 = $('<th></th>');
         var icon = '<i class="icon-ok"></i>';
-        if(isDelete){
+        if (isDelete) {
             icon = '<i class="icon-remove"></i>'
         }
         var delbtn = $('<button type="button" class="' + buttonType + '" style="cursor:pointer">' + icon + '</button>');
@@ -206,9 +251,12 @@ function buildSongsTable(raw_data, container, isDelete) {
         $(col2).data('artist', songobj.artist);
         registerPlayMethod(col2);
         var ms = songobj.duration;
-        min = Math.floor((ms/1000/60) << 0);
-        sec = Math.floor((ms/1000) % 60);
-        if(sec<10) {sec = "0"+sec.toString()};
+        min = Math.floor((ms / 1000 / 60) << 0);
+        sec = Math.floor((ms / 1000) % 60);
+        if (sec < 10) {
+            sec = "0" + sec.toString()
+        }
+        ;
 
         var col3 = $('<td>' + min + ":" + sec + '</td>');
         var col4 = $('<td>' + songobj.artist + '</td>');
@@ -254,15 +302,15 @@ function editPlaylist(isDelete, playlistId, songId, srcBtn) {
                 headers: {"X-CSRFToken": getCookie("csrftoken")},
                 contentType: 'application/json; charset=utf-8',
                 success: function (response) {
-                    $($("#amazing-table")[0]).fadeOut('slow', function(){
+                    $($("#amazing-table")[0]).fadeOut('slow', function () {
                         buildSongsTable(response, $($("#amazing-table")[0]), true);
                         $($("#amazing-table")[0]).fadeIn();
                     });
-                    if(srcBtn != null) {
+                    if (srcBtn != null) {
                         var tag = $('<span id="added_tag" style="display: none; font-size:10px; cursor: pointer;"class="badge badge-success">added!</span>\n');
                         $($(srcBtn).parent().parent().find('td')[0]).append(tag);
-                        $('#added_tag').fadeIn().delay(1000).fadeOut(function(){
-                           $('#added_tag').remove();
+                        $('#added_tag').fadeIn().delay(1000).fadeOut(function () {
+                            $('#added_tag').remove();
                         });
                     }
                 },
@@ -279,7 +327,7 @@ function editPlaylist(isDelete, playlistId, songId, srcBtn) {
 
 function registerPlayMethod(col) {
     $(col).on('click', function () {
-        if($('#loader').length){
+        if ($('#loader').length) {
             return;
         }
         $(col).append("<img id='loader' src='static/media/ajax-loader.gif'></img>");

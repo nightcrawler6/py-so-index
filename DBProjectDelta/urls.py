@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^signout', logout_user, name="logout_user"),
     url(r'^login', login_user, name="login_user"),
     url(r'^playlists_studio', playlists, name="manage_playlist"),
+    url(r'^delete_playlist', delete_playlist, name="delete_playlist"),
     url(r'^music_community', community, name="community"),
     url(r'^who_is_following', who_is_following, name="who_is_following"),
     url(r'^generator', generator, name="generator"),

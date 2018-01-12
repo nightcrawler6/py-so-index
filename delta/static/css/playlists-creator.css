@@ -124,3 +124,11 @@ body {
 button {
     cursor: pointer;
 }
+
+.play-del {
+    color: deepskyblue;
+}
+
+.play-del:hover{
+    color:red;
+}

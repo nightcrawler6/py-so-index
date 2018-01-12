@@ -50,7 +50,7 @@ def get_personal_playlists(request):
         cursor.execute(query_count_songs)
         song_count = cursor.fetchall();
 
-        song_count_dict = {m[0]:m[1] for m in song_count}
+        song_count_dict = {m[0]:(m[1],m[2]) for m in song_count}
 
         response = []
 
@@ -60,9 +60,13 @@ def get_personal_playlists(request):
             entry['user'] = tup[1]
             entry['title'] = tup[2]
             if entry['id'] in song_count_dict:
-                entry['total'] = song_count_dict[entry['id']]
+                entry['total'] = song_count_dict[entry['id']][0]
             else:
                 entry['total'] = 0
+            if entry['id'] in song_count_dict:
+                entry['duration'] = song_count_dict[entry['id']][1]
+            else:
+                entry['duration'] = 0
 
             date = tup[3]
             entry['created_on'] = "{}-{}-{}".format(date.year, date.month, date.day)
@@ -159,6 +163,21 @@ def add_song_to_playlist(request):
         row = cursor.fetchall()
         return HttpResponse(json.dumps({'status': 'success'}), content_type="application/json", status=200)
 
+def delete_playlist(request):
+    isAuth = request.user.is_authenticated()
+    if not isAuth:
+        return HttpResponse(json.dumps({'status': 'unauthorized'}), content_type="application/json", status=404)
+
+    with connection.cursor() as cursor:
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        playlistId = body['id']
+
+        query = queries.delete_playlist_from_space.format(playlistId)
+
+        cursor.execute(query)
+        row = cursor.fetchall()
+        return HttpResponse(json.dumps({'status': 'success'}), content_type="application/json", status=200)
 
 # delete a song from an existing playlist
 def delete_song_from_playlist(request):

@@ -23,6 +23,7 @@ from delta.db_servlets import *
 urlpatterns = [
     url(r'^admin', admin.site.urls),
     url(r'^musico_register', musico_register, name="musico-register"),
+    url(r'^$', musico, name="alt-home-view"),
     url(r'^musico', musico, name="home-view"),
     url(r'^check-db', checkconnectivity, name="query"),
     url(r'^signup', register_user, name="register_new_user"),

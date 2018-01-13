@@ -162,6 +162,7 @@ function registerTransitions() {
                     $($("#amazing-table")[0]).fadeIn();
                     $('.cf').slideDown();
                     $('.cf').data('active-playlist', playlistid);
+                    $('.play-del').css('display','none');
                 },
                 error: function () {
                     alert("something went wrong...")
@@ -171,6 +172,7 @@ function registerTransitions() {
         else {
             $('.table').remove();
             $($("#amazing-table")[0]).css('display', 'none');
+            $('.play-del').css('display','block');
             toggleAll(obj);
             $('.cf').slideUp();
             $('.cf').removeData('active-playlist');

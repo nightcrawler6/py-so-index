@@ -21,6 +21,7 @@ $(document).ready(function () {
 });
 
 function bindSaveParams(songIds) {
+    $('#save-gen').unbind();
     $('#save-gen').on('click', function () {
         var data = {
             'id-set': songIds

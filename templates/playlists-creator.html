@@ -108,7 +108,8 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <form class="form-horizontal" method="post" action="/create_playlist"> {% csrf_token %}
+                <form class="form-horizontal" method="post" action="/create_playlist"
+                      onsubmit="return verifySignupForm()"> {% csrf_token %}
                     <div class="form-group">
                         <label class="control-label col-sm-4" for="title">Title:</label>
                         <div class="col-sm-10">

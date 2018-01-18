@@ -360,6 +360,20 @@ function registerPlayMethod(col) {
 }
 
 /***
+ * Verify that playlist creation form is not empty
+ * @returns {boolean}
+ */
+function verifySignupForm(){
+    var title = $('#title').val();
+    var url = $('#photo-album').val();
+
+    if(title == "" || url == ""){
+        return false;
+    }
+    return true;
+}
+
+/***
  * Retrieves the cookie name set on current page
  * @param c_name
  *      name of cookie entry
